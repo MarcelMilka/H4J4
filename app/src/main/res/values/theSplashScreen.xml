@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.App.theSplashScreen" parent="Theme.SplashScreen">
+
+        <item name="windowSplashScreenBackground">#262626</item>
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_background</item>-->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/the_splash_screen_icon</item>
+
+    </style>
+
+</resources>
