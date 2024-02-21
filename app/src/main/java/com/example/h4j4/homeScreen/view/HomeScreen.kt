@@ -4,26 +4,36 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
-import com.example.h4j4.ui.theme.Sixty
+
 
 class HomeScreen : ComponentActivity() {
 
     val viewModel = HomeScreenViewModel
+    @OptIn(ExperimentalMaterialApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
 //        a reference to the splash screen
         installSplashScreen().apply {}
 
-        viewModel.publicCurrentState.observe(this@HomeScreen) {
+        viewModel.currentState.observe(this@HomeScreen) {
 
             when (it) {
                 HomeScreenViewState.Loading -> {
@@ -42,13 +52,25 @@ class HomeScreen : ComponentActivity() {
 
         setContent {
 
+            val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+            val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {viewModel.refreshData()})
+
             Column(
 
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = Sixty),
+                    .pullRefresh(pullRefreshState)
+                    .verticalScroll(rememberScrollState()),
 
-                content = { Text("hey there!") }
+                content = {
+                    Text("Hey there!")
+                }
+            )
+
+            PullRefreshIndicator(
+                refreshing = isRefreshing,
+                state = pullRefreshState
+                // TODO: Center the pull to refresh
             )
         }
     }
