@@ -5,12 +5,16 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.h4j4.homeScreen.repository.HomeScreenRepository
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreen.viewState.WhatIsTracked
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 object HomeScreenViewModel: ViewModel() {
+
+    private val repository = HomeScreenRepository()
 
     private var _CurrentState = MutableLiveData<HomeScreenViewState>()
     val currentState: MutableLiveData<HomeScreenViewState>
@@ -23,7 +27,6 @@ object HomeScreenViewModel: ViewModel() {
         get() = _isRefreshing
 
     init {
-
         loadData()
     }
 
@@ -32,19 +35,31 @@ object HomeScreenViewModel: ViewModel() {
         viewModelScope.launch {
 
             _CurrentState.postValue(HomeScreenViewState.Loading)
-            delay(5000)
-            _CurrentState.postValue(HomeScreenViewState.LoadedSuccessfully("Hey there!"))
+
+            repository.checkIfNewWeek()
+
+            val whatIsTracked = repository.checkWhatIsTracked()
+            val myUnit = repository.loadData(whatIsTracked)
+
+            _CurrentState.postValue(HomeScreenViewState.LoadedSuccessfully(
+                streak = myUnit.streak,
+                whatIsTracked = whatIsTracked,
+                weeklyIntakeOfWater = myUnit.weeklyIntakeOfWater,
+                weeklyIntakeOfCreatine = myUnit.weeklyIntakeOfCreatine,
+                portionsOfWater = myUnit.portionsOfWater,
+                portionsOfCreatine = myUnit.portionsOfCreatine
+            ))
+
         }
     }
 
-    public fun refreshData() {
+    fun refreshData() {
 
         viewModelScope.launch {
             _isRefreshing.emit(true)
-            Log.d("test of swipe-to-refresh", "is refreshing")
-            delay(5000)
+            delay(2000)
+            loadData()
             _isRefreshing.emit(false)
-            Log.d("test of swipe-to-refresh", "refreshed")
         }
     }
 }

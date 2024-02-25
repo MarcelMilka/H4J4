@@ -4,8 +4,14 @@ sealed class HomeScreenViewState {
 
     object Loading: HomeScreenViewState()
 
-    data class LoadedSuccessfully(var x: String): HomeScreenViewState()
+    data class LoadedSuccessfully(
+        val streak: Streak,
+        val whatIsTracked: WhatIsTracked,
+        val weeklyIntakeOfWater: WeeklyIntakeOfWater,
+        val weeklyIntakeOfCreatine: WeeklyIntakeOfCreatine,
+        val portionsOfWater: PortionsOfWater,
+        val portionsOfCreatine: PortionsOfCreatine
+    ): HomeScreenViewState()
 
     object LoadedUnsuccessfully: HomeScreenViewState()
-
 }

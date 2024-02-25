@@ -41,7 +41,13 @@ class HomeScreen : ComponentActivity() {
                 }
 
                 is HomeScreenViewState.LoadedSuccessfully -> {
-                    Log.d("test of vm", "loaded successfully, ${it.x}")
+                    Log.d("test of vm", "loaded successfully")
+                    Log.d("test of vm", "WhatIsTracked = ${it.whatIsTracked}")
+                    Log.d("test of vm", "WhatIsTracked = ${it.portionsOfCreatine}")
+                    Log.d("test of vm", "WhatIsTracked = ${it.streak}")
+                    Log.d("test of vm", "WhatIsTracked = ${it.portionsOfWater}")
+                    Log.d("test of vm", "WhatIsTracked = ${it.weeklyIntakeOfCreatine}")
+                    Log.d("test of vm", "WhatIsTracked = ${it.weeklyIntakeOfWater}")
                 }
 
                 HomeScreenViewState.LoadedUnsuccessfully -> {
