@@ -49,7 +49,6 @@ object HomeScreenViewModel: ViewModel() {
                 portionsOfWater = myUnit.portionsOfWater,
                 portionsOfCreatine = myUnit.portionsOfCreatine
             ))
-
         }
     }
 

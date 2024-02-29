@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -13,11 +15,16 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 
@@ -25,59 +32,60 @@ import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 class HomeScreen : ComponentActivity() {
 
     val viewModel = HomeScreenViewModel
-    @OptIn(ExperimentalMaterialApi::class)
+    @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
 
 //        a reference to the splash screen
-        installSplashScreen().apply {}
+//        installSplashScreen().apply {}
 
-        viewModel.currentState.observe(this@HomeScreen) {
+        viewModel.currentState.observe(this@HomeScreen) { homeScreenViewState ->
 
-            when (it) {
-                HomeScreenViewState.Loading -> {
-                    Log.d("test of vm", "loading")
-                }
+            setContent {
 
-                is HomeScreenViewState.LoadedSuccessfully -> {
-                    Log.d("test of vm", "loaded successfully")
-                    Log.d("test of vm", "WhatIsTracked = ${it.whatIsTracked}")
-                    Log.d("test of vm", "WhatIsTracked = ${it.portionsOfCreatine}")
-                    Log.d("test of vm", "WhatIsTracked = ${it.streak}")
-                    Log.d("test of vm", "WhatIsTracked = ${it.portionsOfWater}")
-                    Log.d("test of vm", "WhatIsTracked = ${it.weeklyIntakeOfCreatine}")
-                    Log.d("test of vm", "WhatIsTracked = ${it.weeklyIntakeOfWater}")
-                }
+//                Pull to refresh
+                val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
+                val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {viewModel.refreshData()})
 
-                HomeScreenViewState.LoadedUnsuccessfully -> {
-                    Log.d("test of vm", "loaded unsuccessfully")
-                }
+//                Modal bottom sheet
+                val sheetState = rememberModalBottomSheetState()
+                val scope = rememberCoroutineScope()
+                var showBottomSheet by remember { mutableStateOf(false) }
+
+
+                Column(
+
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 10.dp, end = 10.dp, top = 10.dp, bottom = 10.dp)
+                        .pullRefresh(pullRefreshState)
+                        .verticalScroll(rememberScrollState()),
+
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+
+                    content = {
+
+                        DiagramOfWeeklyWaterIntake(homeScreenViewState)
+
+                        if (showBottomSheet) {
+                            ModalBottomSheet(
+
+                                onDismissRequest = {!showBottomSheet},
+                                sheetState = sheetState,
+                                content = {}
+                            )
+                        }
+                    }
+                )
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState
+                    // TODO: Center the pull to refresh
+                )
             }
-        }
-
-        setContent {
-
-            val isRefreshing by viewModel.isRefreshing.collectAsStateWithLifecycle()
-            val pullRefreshState = rememberPullRefreshState(refreshing = isRefreshing, onRefresh = {viewModel.refreshData()})
-
-            Column(
-
-                modifier = Modifier
-                    .fillMaxSize()
-                    .pullRefresh(pullRefreshState)
-                    .verticalScroll(rememberScrollState()),
-
-                content = {
-                    Text("Hey there!")
-                }
-            )
-
-            PullRefreshIndicator(
-                refreshing = isRefreshing,
-                state = pullRefreshState
-                // TODO: Center the pull to refresh
-            )
         }
     }
 }
