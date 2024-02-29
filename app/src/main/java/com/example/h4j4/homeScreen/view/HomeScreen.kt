@@ -15,7 +15,6 @@ import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -25,12 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.h4j4.homeScreen.modalBottomSheet.DayToDisplay
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
-import kotlinx.coroutines.launch
-import java.time.DayOfWeek
+
 
 class HomeScreen : ComponentActivity() {
 
@@ -54,15 +51,8 @@ class HomeScreen : ComponentActivity() {
 //                Modal bottom sheet
                 val sheetState = rememberModalBottomSheetState()
                 val scope = rememberCoroutineScope()
-                var showBottomSheet by remember { mutableStateOf(DayToDisplay(false, null)) }
+                var showBottomSheet by remember { mutableStateOf(false) }
 
-                LaunchedEffect(showBottomSheet.display) {
-                    if (showBottomSheet.display) {
-                        sheetState.show()
-                    } else {
-                        sheetState.hide()
-                    }
-                }
 
                 Column(
 
@@ -77,37 +67,15 @@ class HomeScreen : ComponentActivity() {
 
                     content = {
 
-                        Button(onClick = {}, content = {})
+                        DiagramOfWeeklyWaterIntake(homeScreenViewState)
 
-                        DiagramOfWeeklyWaterIntake(homeScreenViewState) { dtd: DayToDisplay  -> showBottomSheet = DayToDisplay(display = dtd.display, dayOfWeek = dtd.dayOfWeek)}
-
-                        if (showBottomSheet.display) {
+                        if (showBottomSheet) {
                             ModalBottomSheet(
 
-                                onDismissRequest = {
-                                    showBottomSheet.display = false
-                                    showBottomSheet.dayOfWeek = null
-                                },
-
+                                onDismissRequest = {!showBottomSheet},
                                 sheetState = sheetState,
-                                content = {
-
-                                    when (showBottomSheet.dayOfWeek) {
-
-                                        DayOfWeek.MONDAY -> {
-                                            Text("monday")
-                                        }
-
-                                        else -> {
-                                            Text("oTHER DAY")
-                                        }
-                                    }
-                                }
+                                content = {}
                             )
-                        }
-
-                        else {
-                            scope.launch { sheetState.hide() }
                         }
                     }
                 )
