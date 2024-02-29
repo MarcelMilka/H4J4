@@ -6,29 +6,32 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.homeScreen.modalBottomSheet.DayToDisplay
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 import org.checkerframework.framework.qual.ConditionalPostconditionAnnotation
+import java.time.DayOfWeek
 import kotlin.time.times
 
+//Am I using the LaunchedEffect properly in the composable below?
 @Composable
-fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
+fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState, bottomSheetController: (DayToDisplay) -> Unit) {
 
-    var showLogs: Boolean? by remember { mutableStateOf(false) }
+    var showLogs: DayToDisplay by remember { mutableStateOf(DayToDisplay(false, null)) }
 
-    if (showLogs != null) {
+    LaunchedEffect(showLogs.display) {
 
+        if (showLogs.display) {
 
+            bottomSheetController(DayToDisplay(display = showLogs.display, dayOfWeek = showLogs.dayOfWeek))
+            showLogs = DayToDisplay(display = false, dayOfWeek = null)
+        }
     }
 
     Column(
@@ -158,13 +161,13 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                                 HomeScreenViewState.Loading -> {}
 
                                 is HomeScreenViewState.LoadedSuccessfully -> {
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // monday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // tuesday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // wednesday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // thursday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // friday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // saturday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // sunday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.MONDAY) { bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)} // monday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.TUESDAY) {bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)}// tuesday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.WEDNESDAY) {bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)}// wednesday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.THURSDAY) {bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)}// thursday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.FRIDAY) {bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)}// friday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.SATURDAY) {bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)}// saturday
+                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = DayOfWeek.SUNDAY) {bottomSheetController -> showLogs = DayToDisplay(display = bottomSheetController.display, dayOfWeek = bottomSheetController.dayOfWeek)}// sunday
                                 }
 
                                 HomeScreenViewState.LoadedUnsuccessfully -> {
@@ -225,7 +228,7 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
 }
 
 @Composable
-fun RowScope.OneDayWater(waterDrankThisDay: Int, waterToDrinkThisDay: Int) {
+fun RowScope.OneDayWater(waterDrankThisDay: Int, waterToDrinkThisDay: Int, dayOfWeek: DayOfWeek , bottomSheetController: (DayToDisplay) -> Unit) {
 
     var valueToPass = (waterDrankThisDay * 160) / waterToDrinkThisDay
 
@@ -253,7 +256,8 @@ fun RowScope.OneDayWater(waterDrankThisDay: Int, waterToDrinkThisDay: Int) {
                     .width(20.dp),
 
                 shape = RoundedCornerShape(10.dp),
-                onClick = {},
+                enabled = false,
+                onClick = {bottomSheetController(DayToDisplay(true, dayOfWeek))},
                 content = {}
             )
 
