@@ -6,6 +6,8 @@ import com.example.h4j4.homeScreen.viewState.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
 import kotlin.coroutines.suspendCoroutine
 import java.time.DayOfWeek
@@ -17,6 +19,7 @@ class HomeScreenRepository : HomeScreenInterface {
     private val firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val me = firebase.collection("me")
     private val _weeklyIntakeOfWater = me.document("Weekly intake of water")
+    private val _weeklyIntakeOfCreatine = me.document("Weekly intake of creatine")
     override suspend fun checkWhatIsTracked(): WhatIsTracked {
 
         return suspendCoroutine { continuation ->
@@ -41,7 +44,6 @@ class HomeScreenRepository : HomeScreenInterface {
         }
     }
 
-    // TODO: use WhatIsTracked in the checkIfNewWeek
     override suspend fun checkIfNewWeek() {
 
         val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
@@ -82,6 +84,49 @@ class HomeScreenRepository : HomeScreenInterface {
 
 
                             _weeklyIntakeOfWater.update(weeklyIntakeOfWater)
+
+                            CoroutineScope(Dispatchers.IO).launch { loadData(null) }
+
+                        } else {
+                            CoroutineScope(Dispatchers.IO).launch { loadData(null) }
+                        }
+                    }
+                }
+
+            _weeklyIntakeOfCreatine
+                .get()
+                .addOnSuccessListener {
+
+                    if (it != null) {
+
+//                        monday is not necessary, because on monday there may be other value than 0
+                        val tuesday = it.getString("tuesday")!!.toInt()
+                        val wednesday = it.getString("wednesday")!!.toInt()
+                        val thursday = it.getString("thursday")!!.toInt()
+                        val friday = it.getString("friday")!!.toInt()
+                        val saturday = it.getString("saturday")!!.toInt()
+                        val sunday = it.getString("sunday")!!.toInt()
+
+                        if (tuesday != 0 ||
+                            wednesday != 0 ||
+                            thursday != 0 ||
+                            friday != 0 ||
+                            saturday != 0 ||
+                            sunday != 0
+                        ) {
+
+                            val weeklyIntakeOfCreatine = mapOf(
+                                "monday" to "0",
+                                "tuesday" to "0",
+                                "wednesday" to "0",
+                                "thursday" to "0",
+                                "friday" to "0",
+                                "saturday" to "0",
+                                "sunday" to "0",
+                            )
+
+
+                            _weeklyIntakeOfCreatine.update(weeklyIntakeOfCreatine)
 
                             CoroutineScope(Dispatchers.IO).launch { loadData(null) }
 
@@ -248,4 +293,99 @@ class HomeScreenRepository : HomeScreenInterface {
                 }
         }
     }
+
+
+    override suspend fun loadChanges(homeScreenViewState: HomeScreenViewState.LoadedSuccessfully) : kotlinx.coroutines.flow.Flow<LoadChangesUnit> {
+
+        return callbackFlow {
+
+            val weeklyWaterIntake = _weeklyIntakeOfWater
+                .addSnapshotListener { value, error ->
+
+                    if (value != null && error == null) {
+
+                        val dailyGoal = value.getString("daily goal")?.toInt()!!
+                        val monday = value.getString("monday")?.toInt()!!
+                        val tuesday = value.getString("tuesday")?.toInt()!!
+                        val wednesday = value.getString("wednesday")?.toInt()!!
+                        val thursday = value.getString("thursday")?.toInt()!!
+                        val friday = value.getString("friday")?.toInt()!!
+                        val saturday = value.getString("saturday")?.toInt()!!
+                        val sunday = value.getString("sunday")?.toInt()!!
+
+                        val weeklyWaterIntake = WeeklyIntakeOfWater(dailyGoal, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+                        trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = null))
+                    }
+
+                    else {
+                        return@addSnapshotListener
+                    }
+                }
+
+            awaitClose { weeklyWaterIntake.remove() }
+        }
+    }
 }
+
+
+
+
+
+
+//return flow {
+//
+//    when (homeScreenViewState.whatIsTracked) {
+//
+//        WhatIsTracked(water = true, creatine = false) -> {
+//
+//            Log.d("my snapshot listener", "fetching only water")
+//            _weeklyIntakeOfWater
+//                .addSnapshotListener { value, error ->
+//
+//                    if (value != null) {
+//
+//                        val dailyGoal = value.getString("daily goal")?.toInt()
+//                        val monday = value.getString("monday")?.toInt()
+//                        val tuesday = value.getString("tuesday")?.toInt()
+//                        val wednesday = value.getString("wednesday")?.toInt()
+//                        val thursday = value.getString("thursday")?.toInt()
+//                        val friday = value.getString("friday")?.toInt()
+//                        val saturday = value.getString("saturday")?.toInt()
+//                        val sunday = value.getString("sunday")?.toInt()
+//
+//                        if (dailyGoal != null &&
+//                            monday != null &&
+//                            tuesday != null &&
+//                            wednesday != null &&
+//                            thursday != null &&
+//                            friday != null &&
+//                            saturday != null &&
+//                            sunday != null) {
+//
+//                            val weeklyIntakeOfWater = WeeklyIntakeOfWater(
+//                                dailyGoal = dailyGoal,
+//                                monday = monday,
+//                                tuesday = tuesday,
+//                                wednesday = wednesday,
+//                                thursday = thursday,
+//                                friday = friday,
+//                                saturday = saturday,
+//                                sunday = sunday,
+//                            )
+//
+//                            toEmit = LoadChangesUnit(
+//                                water = true,
+//                                weeklyIntakeOfWater = weeklyIntakeOfWater,
+//                                creatine = false,
+//                                weeklyIntakeOfCreatine = null
+//                            )
+//                        }
+//                    }
+//                }
+//        }
+//        WhatIsTracked(water = false, creatine = true) -> {Log.d("my snapshot listener", "fetching only creatine")}
+//        WhatIsTracked(water = true, creatine = true) -> {Log.d("my snapshot listener", "fetching water and creatine")}
+//    }
+//
+//    emit(toEmit)
+//}

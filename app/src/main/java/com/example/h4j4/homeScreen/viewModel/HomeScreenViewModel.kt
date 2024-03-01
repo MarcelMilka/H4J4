@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.h4j4.homeScreen.repository.HomeScreenRepository
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreen.viewState.WeeklyIntakeOfWater
 import com.example.h4j4.homeScreen.viewState.WhatIsTracked
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
@@ -41,14 +42,38 @@ object HomeScreenViewModel: ViewModel() {
             val whatIsTracked = repository.checkWhatIsTracked()
             val myUnit = repository.loadData(whatIsTracked)
 
-            _CurrentState.postValue(HomeScreenViewState.LoadedSuccessfully(
+            val loadedSuccessfully = HomeScreenViewState.LoadedSuccessfully(
                 streak = myUnit.streak,
                 whatIsTracked = whatIsTracked,
                 weeklyIntakeOfWater = myUnit.weeklyIntakeOfWater,
                 weeklyIntakeOfCreatine = myUnit.weeklyIntakeOfCreatine,
                 portionsOfWater = myUnit.portionsOfWater,
                 portionsOfCreatine = myUnit.portionsOfCreatine
-            ))
+            )
+
+            _CurrentState.postValue(loadedSuccessfully)
+
+            _loadChanges(loadedSuccessfully)
+        }
+    }
+
+    private fun _loadChanges(homeScreenViewState: HomeScreenViewState.LoadedSuccessfully) {
+
+        viewModelScope.launch {
+
+            repository.loadChanges(homeScreenViewState).collect {loadChangesUnit ->
+
+                val updatedValue = HomeScreenViewState.LoadedSuccessfully(
+                    streak = homeScreenViewState.streak,
+                    whatIsTracked = homeScreenViewState.whatIsTracked,
+                    weeklyIntakeOfWater = loadChangesUnit.weeklyIntakeOfWater ?: homeScreenViewState.weeklyIntakeOfWater,
+                    weeklyIntakeOfCreatine = loadChangesUnit.weeklyIntakeOfCreatine ?: homeScreenViewState.weeklyIntakeOfCreatine,
+                    portionsOfWater = homeScreenViewState.portionsOfWater,
+                    portionsOfCreatine = homeScreenViewState.portionsOfCreatine
+                )
+
+                _CurrentState.postValue(updatedValue)
+            }
         }
     }
 
