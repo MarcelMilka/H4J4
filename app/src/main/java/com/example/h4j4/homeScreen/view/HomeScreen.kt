@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
@@ -26,6 +23,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
+import com.example.h4j4.homeScreen.ui.Navbar
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 
@@ -39,7 +37,9 @@ class HomeScreen : ComponentActivity() {
 
 
 //        a reference to the splash screen
-//        installSplashScreen().apply {}
+        installSplashScreen().apply {
+
+        }
 
         viewModel.currentState.observe(this@HomeScreen) { homeScreenViewState ->
 
@@ -68,7 +68,13 @@ class HomeScreen : ComponentActivity() {
 
                     content = {
 
+                        Navbar(homeScreenViewState)
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
                         DiagramOfWeeklyCreatineIntake(homeScreenViewState)
+
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         DiagramOfWeeklyWaterIntake(homeScreenViewState)
 
