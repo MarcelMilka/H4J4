@@ -18,3 +18,6 @@ val WaterToDrink = Color(0xFD0070ff)
 
 val CreatineIngested = Color(0xFF66ff00)
 val CreatineToIngest = Color(0xFD0070ff)
+
+
+val CircularProgressIndicatorTrackColor = Color(0xFDFFFFFF)

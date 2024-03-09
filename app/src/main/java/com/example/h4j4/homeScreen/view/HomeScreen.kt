@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
@@ -66,6 +67,8 @@ class HomeScreen : ComponentActivity() {
                     horizontalAlignment = Alignment.CenterHorizontally,
 
                     content = {
+
+                        DiagramOfWeeklyCreatineIntake(homeScreenViewState)
 
                         DiagramOfWeeklyWaterIntake(homeScreenViewState)
 

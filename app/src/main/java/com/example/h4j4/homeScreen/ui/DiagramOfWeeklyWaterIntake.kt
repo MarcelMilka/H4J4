@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
@@ -95,6 +96,7 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                                         modifier = Modifier
                                             .size(30.dp),
 
+                                        strokeCap = StrokeCap.Round,
                                         color = Color.White
                                     )
 
@@ -104,6 +106,7 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                                         modifier = Modifier
                                             .size(30.dp),
 
+                                        strokeCap = StrokeCap.Round,
                                         color = Color.White
                                     )
 
@@ -113,6 +116,7 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                                         modifier = Modifier
                                             .size(30.dp),
 
+                                        strokeCap = StrokeCap.Round,
                                         color = Color.White
                                     )
 
@@ -220,65 +224,6 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                     )
                 }
             )
-        }
-    )
-}
-
-@Composable
-fun RowScope.OneDayWater(waterDrankThisDay: Int, waterToDrinkThisDay: Int) {
-
-    var valueToPass = (waterDrankThisDay * 160) / waterToDrinkThisDay
-
-    if (valueToPass > 160) {
-        valueToPass = 160
-    }
-
-    Column(
-
-        modifier = Modifier
-            .fillMaxHeight()
-            .weight(1f, true),
-
-        verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally,
-
-        content = {
-
-            Surface(
-
-                modifier = Modifier
-                    .background(color = Color.White, shape = RoundedCornerShape(5.dp, 5.dp, 5.dp, 5.dp))
-                    .shadow(elevation = 100.dp, clip = true)
-                    .height(maxOf(valueToPass.dp, 0.dp))
-                    .width(20.dp),
-
-                shape = RoundedCornerShape(10.dp),
-                onClick = {},
-                content = {}
-            )
-
-//            Divider(Modifier.fillMaxWidth())
-            Spacer(Modifier.height(10.dp))
-        }
-    )
-}
-
-
-@Composable
-fun RowScope.OneDayAbbreviation(dayOfWeek: String) {
-
-    Column(
-
-        modifier = Modifier
-            .fillMaxHeight()
-            .weight(1f, true),
-
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-
-        content = {
-
-            Text(text = dayOfWeek, color = Color.White)
         }
     )
 }
