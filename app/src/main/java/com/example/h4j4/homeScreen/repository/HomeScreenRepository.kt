@@ -2,6 +2,7 @@ package com.example.h4j4.homeScreen.repository
 
 import android.util.Log
 import com.example.h4j4.homeScreen.HomeScreenInterface
+import com.example.h4j4.homeScreen.enumClasses.WaterOrCreatine
 import com.example.h4j4.homeScreen.viewState.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -12,19 +13,25 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.suspendCoroutine
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.coroutines.resume
 
 class HomeScreenRepository : HomeScreenInterface {
 
-    private val firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val me = firebase.collection("me")
-    private val _weeklyIntakeOfWater = me.document("Weekly intake of water")
-    private val _weeklyIntakeOfCreatine = me.document("Weekly intake of creatine")
+    private val _firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val _me = _firebase.collection("me")
+    private val _weeklyIntakeOfWater = _me.document("Weekly intake of water")
+    private val _weeklyIntakeOfCreatine = _me.document("Weekly intake of creatine")
+
+    private val currentDayOfWeek: DayOfWeek = LocalDate.now().dayOfWeek
+    private val currentDate = LocalDate.now()
+    private val currentHour = LocalDateTime.now().hour
+    private val currentMinute = LocalDateTime.now().minute
     override suspend fun checkWhatIsTracked(): WhatIsTracked {
 
         return suspendCoroutine { continuation ->
 
-            me.document("What is tracked")
+            _me.document("What is tracked")
                 .get()
                 .addOnSuccessListener {
 
@@ -46,9 +53,7 @@ class HomeScreenRepository : HomeScreenInterface {
 
     override suspend fun checkIfNewWeek() {
 
-        val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
-
-        if (currentDay == DayOfWeek.MONDAY) {
+        if (currentDayOfWeek == DayOfWeek.MONDAY) {
 
             _weeklyIntakeOfWater
                 .get()
@@ -150,7 +155,7 @@ class HomeScreenRepository : HomeScreenInterface {
 
         return suspendCoroutine { continuation ->
 
-            me
+            _me
                 .get()
                 .addOnSuccessListener { availableDocuments ->
 
@@ -294,7 +299,6 @@ class HomeScreenRepository : HomeScreenInterface {
         }
     }
 
-
     override suspend fun loadChanges(homeScreenViewState: HomeScreenViewState.LoadedSuccessfully) : kotlinx.coroutines.flow.Flow<LoadChangesUnit> {
 
         return callbackFlow {
@@ -345,5 +349,27 @@ class HomeScreenRepository : HomeScreenInterface {
 
             awaitClose { weeklyWaterIntake.remove() }
         }
+    }
+
+    override suspend fun addAnotherPortionOfWaterOrCreatine(waterOrCreatine: WaterOrCreatine, currentAmount: String, amountToInrease: String) {
+
+        val sum = (currentAmount.toInt() + amountToInrease.toInt()).toString()
+
+        var scheme = mutableMapOf<String, String>()
+        scheme.put(currentDate.toString(), sum)
+
+        when (waterOrCreatine) {
+
+            WaterOrCreatine.water -> {
+                _weeklyIntakeOfWater.set(scheme)
+            }
+            WaterOrCreatine.creatine -> {
+                _weeklyIntakeOfCreatine.set(scheme)
+            }
+        }
+    }
+
+    override suspend fun addNewPortionOfWaterOrCreatine() {
+        TODO("Not yet implemented")
     }
 }
