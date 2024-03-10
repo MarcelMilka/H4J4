@@ -79,8 +79,6 @@ class HomeScreen : ComponentActivity() {
 
                         DiagramOfWeeklyWaterIntake(homeScreenViewState)
 
-
-
                         if (showBottomSheet) {
                             ModalBottomSheet(
 

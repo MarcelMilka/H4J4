@@ -63,7 +63,6 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
 
             Divider(modifier = Modifier.fillMaxWidth())
 
-//
             Row(
 
                 modifier = Modifier
@@ -162,13 +161,27 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                                 HomeScreenViewState.Loading -> {}
 
                                 is HomeScreenViewState.LoadedSuccessfully -> {
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // monday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // tuesday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // wednesday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // thursday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // friday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // saturday
-                                    OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal) // sunday
+
+                                    if (uiState.whatIsTracked.water) {
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                    }
+
+                                    else {
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                    }
                                 }
 
                                 HomeScreenViewState.LoadedUnsuccessfully -> {
