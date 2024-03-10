@@ -1,14 +1,12 @@
 package com.example.h4j4.homeScreen.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
@@ -26,8 +24,6 @@ import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.ui.Navbar
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
-import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
-
 
 class HomeScreen : ComponentActivity() {
 
@@ -82,6 +78,8 @@ class HomeScreen : ComponentActivity() {
                         Spacer(modifier = Modifier.height(20.dp))
 
                         DiagramOfWeeklyWaterIntake(homeScreenViewState)
+
+
 
                         if (showBottomSheet) {
                             ModalBottomSheet(

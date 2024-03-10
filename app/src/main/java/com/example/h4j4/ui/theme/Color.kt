@@ -20,4 +20,4 @@ val CreatineIngested = Color(0xFF66ff00)
 val CreatineToIngest = Color(0x3366ff00)
 
 
-val CircularProgressIndicatorTrackColor = Color(0xFDFFFFFF)
+val CircularProgressIndicatorTrackColor = Color(0x33FFFFFF)
