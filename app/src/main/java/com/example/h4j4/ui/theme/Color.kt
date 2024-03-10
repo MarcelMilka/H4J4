@@ -14,10 +14,10 @@ val Sixty = Color(0xFF262626)
 val Thirty = Color(0xFFFFFFFF)
 
 val WaterDrank = Color(0xFF0070ff)
-val WaterToDrink = Color(0xFD0070ff)
+val WaterToDrink = Color(0x330070ff)
 
 val CreatineIngested = Color(0xFF66ff00)
-val CreatineToIngest = Color(0xFD0070ff)
+val CreatineToIngest = Color(0x3366ff00)
 
 
 val CircularProgressIndicatorTrackColor = Color(0xFDFFFFFF)

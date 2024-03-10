@@ -23,7 +23,7 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 
         modifier = Modifier
             .fillMaxWidth()
-            .height(120.dp)
+            .height(85.dp)
             .border(
                 width = 4.dp,
                 color = Color.White,
@@ -63,23 +63,23 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 
                     when (uiState) {
                         HomeScreenViewState.Loading -> {
-                            OneDayCreatine(loading = true, null)
-                            OneDayCreatine(loading = true, null)
-                            OneDayCreatine(loading = true, null)
-                            OneDayCreatine(loading = true, null)
-                            OneDayCreatine(loading = true, null)
-                            OneDayCreatine(loading = true, null)
-                            OneDayCreatine(loading = true, null)
+                            OneDayCreatine(loading = true, null, dayOfWeek = "M")
+                            OneDayCreatine(loading = true, null, dayOfWeek = "T")
+                            OneDayCreatine(loading = true, null, dayOfWeek = "W")
+                            OneDayCreatine(loading = true, null, dayOfWeek = "T")
+                            OneDayCreatine(loading = true, null, dayOfWeek = "F")
+                            OneDayCreatine(loading = true, null, dayOfWeek = "S")
+                            OneDayCreatine(loading = true, null, dayOfWeek = "S")
                         }
 
                         is HomeScreenViewState.LoadedSuccessfully -> {
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.monday / uiState.weeklyIntakeOfWater.dailyGoal)
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.tuesday / uiState.weeklyIntakeOfWater.dailyGoal)
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.wednesday / uiState.weeklyIntakeOfWater.dailyGoal)
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.thursday / uiState.weeklyIntakeOfWater.dailyGoal)
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.friday / uiState.weeklyIntakeOfWater.dailyGoal)
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.saturday / uiState.weeklyIntakeOfWater.dailyGoal)
-                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.sunday / uiState.weeklyIntakeOfWater.dailyGoal)
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.monday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "M")
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.tuesday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "T")
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.wednesday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "W")
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.thursday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "T")
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.friday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "F")
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.saturday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "S")
+                            OneDayCreatine(loading = false, uiState.weeklyIntakeOfCreatine.sunday / uiState.weeklyIntakeOfWater.dailyGoal, dayOfWeek = "S")
                         }
 
                         HomeScreenViewState.LoadedUnsuccessfully -> {
@@ -88,36 +88,12 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
                     }
                 }
             )
-
-            Divider(modifier = Modifier.fillMaxWidth())
-
-//            Days of week
-            Row(
-
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(35.dp),
-
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically,
-
-                content = {
-
-                    OneDayAbbreviation("M")
-                    OneDayAbbreviation("T")
-                    OneDayAbbreviation("T")
-                    OneDayAbbreviation("W")
-                    OneDayAbbreviation("F")
-                    OneDayAbbreviation("S")
-                    OneDayAbbreviation("S")
-                }
-            )
         }
     )
 }
 
 @Composable
-fun RowScope.OneDayCreatine(loading: Boolean, progress: Int?) {
+fun RowScope.OneDayCreatine(loading: Boolean, progress: Int?, dayOfWeek: String) {
 
     Box(
 
@@ -165,7 +141,7 @@ fun RowScope.OneDayCreatine(loading: Boolean, progress: Int?) {
                 )
             }
 
-
+            Text(text = dayOfWeek, color = Color.White)
         }
     )
 }

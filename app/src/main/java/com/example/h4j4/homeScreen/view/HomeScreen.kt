@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.h4j4.homeScreen.ui.ControllPanel
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.ui.Navbar
@@ -63,7 +64,7 @@ class HomeScreen : ComponentActivity() {
                         .pullRefresh(pullRefreshState)
                         .verticalScroll(rememberScrollState()),
 
-                    verticalArrangement = Arrangement.Bottom,
+                    verticalArrangement = Arrangement.Top,
                     horizontalAlignment = Alignment.CenterHorizontally,
 
                     content = {
@@ -71,6 +72,10 @@ class HomeScreen : ComponentActivity() {
                         Navbar(homeScreenViewState)
 
                         Spacer(modifier = Modifier.height(20.dp))
+
+                        ControllPanel(homeScreenViewState)
+
+                        Spacer(modifier = Modifier.height(49.dp))
 
                         DiagramOfWeeklyCreatineIntake(homeScreenViewState)
 
