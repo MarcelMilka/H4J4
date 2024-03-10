@@ -79,7 +79,6 @@ dependencies {
 //    MVVM
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.7.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0"
 
 //    Swipe to refresh
     implementation "androidx.compose.material:material:1.7.0-alpha02"

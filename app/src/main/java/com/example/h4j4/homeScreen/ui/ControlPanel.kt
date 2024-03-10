@@ -15,20 +15,12 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import com.example.h4j4.homeScreen.enumClasses.WaterOrCreatine
-import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 import com.example.h4j4.ui.theme.*
 import java.time.LocalDate
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.h4j4.homeScreen.HomeScreenInterface
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
-fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) {
+fun ControllPanel(uiState: HomeScreenViewState) {
 
     val currentDayOfWeek= LocalDate.now().dayOfWeek.toString().lowercase()
 
@@ -221,15 +213,15 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                         }
                         is HomeScreenViewState.LoadedSuccessfully -> {
                             if (uiState.whatIsTracked.water) {
-                                AssistChipLoaded(WaterOrCreatine.water, uiState.portionsOfWater.firstPortion)
-                                AssistChipLoaded(WaterOrCreatine.water, uiState.portionsOfWater.secondPortion)
-                                AssistChipLoaded(WaterOrCreatine.water, uiState.portionsOfWater.thirdPortion)
+                                AssistChipLoaded(uiState.portionsOfWater.firstPortion)
+                                AssistChipLoaded(uiState.portionsOfWater.secondPortion)
+                                AssistChipLoaded(uiState.portionsOfWater.thirdPortion)
                             }
 
                             else {
-                                AssistChipLoaded(WaterOrCreatine.water, 0)
-                                AssistChipLoaded(WaterOrCreatine.water, 0)
-                                AssistChipLoaded(WaterOrCreatine.water, 0)
+                                AssistChipLoaded(0)
+                                AssistChipLoaded(0)
+                                AssistChipLoaded(0)
                             }
                         }
 
@@ -263,15 +255,15 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                         }
                         is HomeScreenViewState.LoadedSuccessfully -> {
                             if (uiState.whatIsTracked.creatine) {
-                                AssistChipLoaded(WaterOrCreatine.creatine, uiState.portionsOfCreatine.firstPortion)
-                                AssistChipLoaded(WaterOrCreatine.creatine, uiState.portionsOfCreatine.secondPortion)
-                                AssistChipLoaded(WaterOrCreatine.creatine, uiState.portionsOfCreatine.thirdPortion)
+                                AssistChipLoaded(uiState.portionsOfCreatine.firstPortion)
+                                AssistChipLoaded(uiState.portionsOfCreatine.secondPortion)
+                                AssistChipLoaded(uiState.portionsOfCreatine.thirdPortion)
                             }
 
                             else {
-                                AssistChipLoaded(WaterOrCreatine.creatine, 0, "0", HomeScreenViewModel)
-                                AssistChipLoaded(WaterOrCreatine.creatine, 0, "0", HomeScreenViewModel)
-                                AssistChipLoaded(WaterOrCreatine.creatine, 0, "0", HomeScreenViewModel)
+                                AssistChipLoaded(0)
+                                AssistChipLoaded(0)
+                                AssistChipLoaded(0)
                             }
                         }
                         HomeScreenViewState.LoadedUnsuccessfully -> TODO()
@@ -343,10 +335,10 @@ fun AssistChipLoading() {
 }
 
 @Composable
-fun AssistChipLoaded(waterOrCreatine: WaterOrCreatine, currentAmount: String, valueOfPortion: String, viewModel: HomeScreenViewModel) {
+fun AssistChipLoaded(valueOfPortion: Int) {
 
-    val textToDisplay = if (valueOfPortion.toInt() != 0) {
-        valueOfPortion
+    val textToDisplay = if (valueOfPortion != 0) {
+        valueOfPortion.toString()
     }
     else {
         "portion"
@@ -360,13 +352,8 @@ fun AssistChipLoaded(waterOrCreatine: WaterOrCreatine, currentAmount: String, va
 
         onClick = {
 
-            if (valueOfPortion.toInt() != 0) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.addAnotherPortionOfWaterOrCreatine(
-                        waterOrCreatine = waterOrCreatine,
-                        currentAmount = currentAmount,
-                        amountToIncrease = valueOfPortion)
-                }
+            if (valueOfPortion != 0) {
+                // TODO: function which adds another portion
             }
             else {
                 // TODO: function which directs to settings

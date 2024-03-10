@@ -73,7 +73,7 @@ class HomeScreen : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        ControllPanel(homeScreenViewState, viewModel)
+                        ControllPanel(homeScreenViewState)
 
                         Spacer(modifier = Modifier.height(49.dp))
 
