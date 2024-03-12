@@ -299,7 +299,7 @@ class HomeScreenRepository : HomeScreenInterface {
 
         return callbackFlow {
 
-            val weeklyWaterIntake = _weeklyIntakeOfWater
+            val weeklyWaterAndCreatineIntake = me
                 .addSnapshotListener { value, error ->
 
                     if (value != null && error == null) {
@@ -308,75 +308,80 @@ class HomeScreenRepository : HomeScreenInterface {
 
                             WhatIsTracked(water = true, creatine = false) -> {
 
-                                val dailyGoal = value.getString("daily goal")?.toInt()!!
-                                val monday = value.getString("monday")?.toInt()!!
-                                val tuesday = value.getString("tuesday")?.toInt()!!
-                                val wednesday = value.getString("wednesday")?.toInt()!!
-                                val thursday = value.getString("thursday")?.toInt()!!
-                                val friday = value.getString("friday")?.toInt()!!
-                                val saturday = value.getString("saturday")?.toInt()!!
-                                val sunday = value.getString("sunday")?.toInt()!!
+                                value.forEach {documentSnapshot ->
 
-                                val weeklyWaterIntake = WeeklyIntakeOfWater(dailyGoal, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
-                                trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = null))
+                                    if (documentSnapshot.id == "Weekly intake of water") {
+
+                                        val dailyGoal = documentSnapshot.getString("daily goal")?.toInt()!!
+                                        val monday = documentSnapshot.getString("monday")?.toInt()!!
+                                        val tuesday = documentSnapshot.getString("tuesday")?.toInt()!!
+                                        val wednesday = documentSnapshot.getString("wednesday")?.toInt()!!
+                                        val thursday = documentSnapshot.getString("thursday")?.toInt()!!
+                                        val friday = documentSnapshot.getString("friday")?.toInt()!!
+                                        val saturday = documentSnapshot.getString("saturday")?.toInt()!!
+                                        val sunday = documentSnapshot.getString("sunday")?.toInt()!!
+
+                                        val weeklyWaterIntake = WeeklyIntakeOfWater(dailyGoal, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+                                        trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = null))
+                                    }
+                                }
                             }
 
                             WhatIsTracked(water = false, creatine = true) -> {
 
-                                val dailyGoal = value.getString("daily goal")?.toInt()!!
-                                val monday = value.getString("monday")?.toInt()!!
-                                val tuesday = value.getString("tuesday")?.toInt()!!
-                                val wednesday = value.getString("wednesday")?.toInt()!!
-                                val thursday = value.getString("thursday")?.toInt()!!
-                                val friday = value.getString("friday")?.toInt()!!
-                                val saturday = value.getString("saturday")?.toInt()!!
-                                val sunday = value.getString("sunday")?.toInt()!!
+                                value.forEach {documentSnapshot ->
 
-                                val weeklyWaterIntake = WeeklyIntakeOfWater(dailyGoal, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
-                                trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = null))
+                                    if (documentSnapshot.id == "Weekly intake of creatine") {
+
+                                        val dailyGoal = documentSnapshot.getString("daily goal")?.toInt()!!
+                                        val monday = documentSnapshot.getString("monday")?.toInt()!!
+                                        val tuesday = documentSnapshot.getString("tuesday")?.toInt()!!
+                                        val wednesday = documentSnapshot.getString("wednesday")?.toInt()!!
+                                        val thursday = documentSnapshot.getString("thursday")?.toInt()!!
+                                        val friday = documentSnapshot.getString("friday")?.toInt()!!
+                                        val saturday = documentSnapshot.getString("saturday")?.toInt()!!
+                                        val sunday = documentSnapshot.getString("sunday")?.toInt()!!
+
+                                        val weeklyCreatineIntake = WeeklyIntakeOfCreatine(dailyGoal, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
+                                        trySend(LoadChangesUnit(weeklyIntakeOfWater = null, weeklyIntakeOfCreatine = weeklyCreatineIntake))
+                                    }
+                                }
                             }
 
                             WhatIsTracked(water = true, creatine = true) -> {
 
-                                val waterDailyGoal = value.getString("daily goal")?.toInt()!!
-                                val waterMonday = value.getString("monday")?.toInt()!!
-                                val waterTuesday = value.getString("tuesday")?.toInt()!!
-                                val waterWednesday = value.getString("wednesday")?.toInt()!!
-                                val waterThursday = value.getString("thursday")?.toInt()!!
-                                val waterFriday = value.getString("friday")?.toInt()!!
-                                val waterSaturday = value.getString("saturday")?.toInt()!!
-                                val waterSunday = value.getString("sunday")?.toInt()!!
+                                var weeklyWaterIntake = WeeklyIntakeOfWater(0, 0, 0, 0, 0, 0, 0, 0)
+                                var weeklyCreatineIntake = WeeklyIntakeOfCreatine(0, 0, 0, 0, 0, 0, 0, 0)
 
-                                val creatineDailyGoal = value.getString("daily goal")?.toInt()!!
-                                val creatineMonday = value.getString("monday")?.toInt()!!
-                                val creatineTuesday = value.getString("tuesday")?.toInt()!!
-                                val creatineWednesday = value.getString("wednesday")?.toInt()!!
-                                val creatineThursday = value.getString("thursday")?.toInt()!!
-                                val creatineFriday = value.getString("friday")?.toInt()!!
-                                val creatineSaturday = value.getString("saturday")?.toInt()!!
-                                val creatineSunday = value.getString("sunday")?.toInt()!!
+                                value.documents.forEach { documentSnapshot ->
 
-                                val weeklyWaterIntake = WeeklyIntakeOfWater(
-                                    waterDailyGoal,
-                                    waterMonday,
-                                    waterTuesday,
-                                    waterWednesday,
-                                    waterThursday,
-                                    waterFriday,
-                                    waterSaturday,
-                                    waterSunday
-                                )
+                                    when (documentSnapshot.id) {
 
-                                val weeklyCreatineIntake = WeeklyIntakeOfCreatine(
-                                    creatineDailyGoal,
-                                    creatineMonday,
-                                    creatineTuesday,
-                                    creatineWednesday,
-                                    creatineThursday,
-                                    creatineFriday,
-                                    creatineSaturday,
-                                    creatineSunday
-                                )
+                                        "Weekly intake of water" -> {
+
+                                            weeklyWaterIntake.dailyGoal = documentSnapshot.getString("daily goal")?.toInt()!!
+                                            weeklyWaterIntake.monday = documentSnapshot.getString("monday")?.toInt()!!
+                                            weeklyWaterIntake.tuesday = documentSnapshot.getString("tuesday")?.toInt()!!
+                                            weeklyWaterIntake.wednesday = documentSnapshot.getString("wednesday")?.toInt()!!
+                                            weeklyWaterIntake.thursday = documentSnapshot.getString("thursday")?.toInt()!!
+                                            weeklyWaterIntake.friday = documentSnapshot.getString("friday")?.toInt()!!
+                                            weeklyWaterIntake.saturday = documentSnapshot.getString("saturday")?.toInt()!!
+                                            weeklyWaterIntake.sunday = documentSnapshot.getString("sunday")?.toInt()!!
+                                        }
+
+                                        "Weekly intake of creatine" -> {
+
+                                            weeklyCreatineIntake.dailyGoal = documentSnapshot.getString("daily goal")?.toInt()!!
+                                            weeklyCreatineIntake.monday = documentSnapshot.getString("monday")?.toInt()!!
+                                            weeklyCreatineIntake.tuesday = documentSnapshot.getString("tuesday")?.toInt()!!
+                                            weeklyCreatineIntake.wednesday = documentSnapshot.getString("wednesday")?.toInt()!!
+                                            weeklyCreatineIntake.thursday = documentSnapshot.getString("thursday")?.toInt()!!
+                                            weeklyCreatineIntake.friday = documentSnapshot.getString("friday")?.toInt()!!
+                                            weeklyCreatineIntake.saturday = documentSnapshot.getString("saturday")?.toInt()!!
+                                            weeklyCreatineIntake.sunday = documentSnapshot.getString("sunday")?.toInt()!!
+                                        }
+                                    }
+                                }
 
                                 trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = weeklyCreatineIntake))
                             }
@@ -388,7 +393,7 @@ class HomeScreenRepository : HomeScreenInterface {
                     }
                 }
 
-            awaitClose { weeklyWaterIntake.remove() }
+            awaitClose { weeklyWaterAndCreatineIntake.remove() }
         }
     }
 }
