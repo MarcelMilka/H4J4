@@ -73,6 +73,7 @@ object HomeScreenViewModel: ViewModel() {
                 )
 
                 _CurrentState.postValue(updatedValue)
+
             }
         }
     }

@@ -90,7 +90,6 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 
                             else {
 
-                                Log.d("DiagramOfWeeklyCreatineIntake", "no i git")
                                 OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "M")
                                 OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "T")
                                 OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "W")

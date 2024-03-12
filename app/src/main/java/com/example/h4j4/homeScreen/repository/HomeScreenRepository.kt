@@ -335,6 +335,51 @@ class HomeScreenRepository : HomeScreenInterface {
                                 val weeklyWaterIntake = WeeklyIntakeOfWater(dailyGoal, monday, tuesday, wednesday, thursday, friday, saturday, sunday)
                                 trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = null))
                             }
+
+                            WhatIsTracked(water = true, creatine = true) -> {
+
+                                val waterDailyGoal = value.getString("daily goal")?.toInt()!!
+                                val waterMonday = value.getString("monday")?.toInt()!!
+                                val waterTuesday = value.getString("tuesday")?.toInt()!!
+                                val waterWednesday = value.getString("wednesday")?.toInt()!!
+                                val waterThursday = value.getString("thursday")?.toInt()!!
+                                val waterFriday = value.getString("friday")?.toInt()!!
+                                val waterSaturday = value.getString("saturday")?.toInt()!!
+                                val waterSunday = value.getString("sunday")?.toInt()!!
+
+                                val creatineDailyGoal = value.getString("daily goal")?.toInt()!!
+                                val creatineMonday = value.getString("monday")?.toInt()!!
+                                val creatineTuesday = value.getString("tuesday")?.toInt()!!
+                                val creatineWednesday = value.getString("wednesday")?.toInt()!!
+                                val creatineThursday = value.getString("thursday")?.toInt()!!
+                                val creatineFriday = value.getString("friday")?.toInt()!!
+                                val creatineSaturday = value.getString("saturday")?.toInt()!!
+                                val creatineSunday = value.getString("sunday")?.toInt()!!
+
+                                val weeklyWaterIntake = WeeklyIntakeOfWater(
+                                    waterDailyGoal,
+                                    waterMonday,
+                                    waterTuesday,
+                                    waterWednesday,
+                                    waterThursday,
+                                    waterFriday,
+                                    waterSaturday,
+                                    waterSunday
+                                )
+
+                                val weeklyCreatineIntake = WeeklyIntakeOfCreatine(
+                                    creatineDailyGoal,
+                                    creatineMonday,
+                                    creatineTuesday,
+                                    creatineWednesday,
+                                    creatineThursday,
+                                    creatineFriday,
+                                    creatineSaturday,
+                                    creatineSunday
+                                )
+
+                                trySend(LoadChangesUnit(weeklyIntakeOfWater = weeklyWaterIntake, weeklyIntakeOfCreatine = weeklyCreatineIntake))
+                            }
                         }
                     }
 
