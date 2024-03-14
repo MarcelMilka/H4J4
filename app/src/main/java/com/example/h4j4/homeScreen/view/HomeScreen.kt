@@ -1,7 +1,6 @@
 package com.example.h4j4.homeScreen.view
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -19,9 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.h4j4.MyApplication
 import com.example.h4j4.homeScreen.ui.ControllPanel
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
@@ -30,13 +27,11 @@ import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 
 class HomeScreen : ComponentActivity() {
 
-    lateinit var viewModel: HomeScreenViewModel
+    val viewModel = HomeScreenViewModel
     @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val container = MyApplication()
-        viewModel = HomeScreenViewModel(container.container.repository)
 
 //        a reference to the splash screen
         installSplashScreen().apply {
