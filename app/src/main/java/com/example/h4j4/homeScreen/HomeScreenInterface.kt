@@ -10,9 +10,7 @@ import java.util.concurrent.Flow
 interface HomeScreenInterface {
 
     suspend fun checkWhatIsTracked(): WhatIsTracked
-
     suspend fun checkIfNewWeek()
-
     suspend fun loadData(whatIsTracked: WhatIsTracked?): MyUnit
     suspend fun loadChanges(homeScreenViewState: HomeScreenViewState.LoadedSuccessfully) : kotlinx.coroutines.flow.Flow<LoadChangesUnit>
 }
