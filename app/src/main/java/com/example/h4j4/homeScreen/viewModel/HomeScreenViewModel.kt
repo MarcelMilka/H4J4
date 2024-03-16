@@ -1,21 +1,15 @@
 package com.example.h4j4.homeScreen.viewModel
 
-import android.util.Log
-import androidx.compose.runtime.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.h4j4.homeScreen.repository.HomeScreenRepository
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
-import com.example.h4j4.homeScreen.viewState.WeeklyIntakeOfWater
-import com.example.h4j4.homeScreen.viewState.WhatIsTracked
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-
-object HomeScreenViewModel: ViewModel() {
-
-    private val repository = HomeScreenRepository()
+import javax.inject.Inject
+class HomeScreenViewModel @Inject constructor(private val repository: HomeScreenRepository) : ViewModel() {
 
     private var _CurrentState = MutableLiveData<HomeScreenViewState>()
     val currentState: MutableLiveData<HomeScreenViewState>

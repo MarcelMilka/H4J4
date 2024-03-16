@@ -24,10 +24,14 @@ import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.ui.Navbar
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class HomeScreen : ComponentActivity() {
 
-    val viewModel = HomeScreenViewModel
+    @Inject
+    lateinit var viewModel: HomeScreenViewModel
     @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

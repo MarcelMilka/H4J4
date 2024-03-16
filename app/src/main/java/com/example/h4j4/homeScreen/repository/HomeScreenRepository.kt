@@ -12,9 +12,10 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.suspendCoroutine
 import java.time.DayOfWeek
 import java.time.LocalDate
+import javax.inject.Inject
 import kotlin.coroutines.resume
 
-class HomeScreenRepository : HomeScreenInterface {
+class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
     private val firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val me = firebase.collection("me")
