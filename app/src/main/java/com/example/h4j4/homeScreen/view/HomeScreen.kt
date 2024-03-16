@@ -10,6 +10,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -24,7 +25,10 @@ import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyCreatineIntake
 import com.example.h4j4.homeScreen.ui.DiagramOfWeeklyWaterIntake
 import com.example.h4j4.homeScreen.ui.Navbar
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
+import com.example.h4j4.homeScreenBottomSheet.view.modalBottomSheet
+import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.time.DayOfWeek
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -32,6 +36,8 @@ class HomeScreen : ComponentActivity() {
 
     @Inject
     lateinit var viewModel: HomeScreenViewModel
+
+    var bottomSheetViewModel = BottomSheetViewModel
     @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +60,7 @@ class HomeScreen : ComponentActivity() {
                 val sheetState = rememberModalBottomSheetState()
                 val scope = rememberCoroutineScope()
                 var showBottomSheet by remember { mutableStateOf(false) }
+                var dayBottomSheet by remember { mutableStateOf(DayOfWeek.MONDAY) }
 
 
                 Column(
@@ -71,6 +78,16 @@ class HomeScreen : ComponentActivity() {
 
                         Navbar(homeScreenViewState)
 
+                        Button(
+
+                            onClick = {
+                                showBottomSheet = true
+                                bottomSheetViewModel.test()
+
+                        },
+                            content = {}
+                        )
+
                         Spacer(modifier = Modifier.height(20.dp))
 
                         ControllPanel(homeScreenViewState)
@@ -84,12 +101,7 @@ class HomeScreen : ComponentActivity() {
                         DiagramOfWeeklyWaterIntake(homeScreenViewState)
 
                         if (showBottomSheet) {
-                            ModalBottomSheet(
-
-                                onDismissRequest = {!showBottomSheet},
-                                sheetState = sheetState,
-                                content = {}
-                            )
+                            modalBottomSheet(sheetState, BottomSheetViewModel, dayBottomSheet) {visibilityOfBottomSheet -> showBottomSheet = visibilityOfBottomSheet}
                         }
                     }
                 )

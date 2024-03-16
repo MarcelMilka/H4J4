@@ -21,6 +21,7 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
     private val me = firebase.collection("me")
     private val _weeklyIntakeOfWater = me.document("Weekly intake of water")
     private val _weeklyIntakeOfCreatine = me.document("Weekly intake of creatine")
+
     override suspend fun checkWhatIsTracked(): WhatIsTracked {
 
         return suspendCoroutine { continuation ->

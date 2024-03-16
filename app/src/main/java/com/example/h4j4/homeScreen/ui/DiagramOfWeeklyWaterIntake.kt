@@ -1,36 +1,20 @@
 package com.example.h4j4.homeScreen.ui
 
-import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
-import org.checkerframework.framework.qual.ConditionalPostconditionAnnotation
-import kotlin.time.times
+import java.time.DayOfWeek
 
 @Composable
 fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
-
-    var showLogs: Boolean? by remember { mutableStateOf(false) }
-
-    if (showLogs != null) {
-
-
-    }
 
     Column(
 
@@ -164,23 +148,23 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
 
                                     if (uiState.whatIsTracked.water) {
 
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.MONDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.TUESDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.WEDNESDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.THURSDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.FRIDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SATURDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SUNDAY)
                                     }
 
                                     else {
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.MONDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.TUESDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.WEDNESDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.THURSDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.FRIDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.SATURDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.SUNDAY)
                                     }
                                 }
 
