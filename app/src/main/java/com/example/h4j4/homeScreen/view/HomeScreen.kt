@@ -1,6 +1,7 @@
 package com.example.h4j4.homeScreen.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -10,9 +11,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +27,9 @@ import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreenBottomSheet.view.modalBottomSheet
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import java.time.DayOfWeek
 import javax.inject.Inject
 
@@ -58,10 +60,12 @@ class HomeScreen : ComponentActivity() {
 
 //                Modal bottom sheet
                 val sheetState = rememberModalBottomSheetState()
-                val scope = rememberCoroutineScope()
-                var showBottomSheet by remember { mutableStateOf(false) }
+                var showBottomSheet = MutableSharedFlow<Boolean>(false) // var showBottomSheet by remember { mutableStateOf(false) }
                 var dayBottomSheet by remember { mutableStateOf(DayOfWeek.MONDAY) }
 
+                LaunchedEffect(showBottomSheet) {
+                    Log.d("HomeScreen - showBottomSheet", "show bottom sheet = $showBottomSheet")
+                }
 
                 Column(
 
@@ -78,16 +82,6 @@ class HomeScreen : ComponentActivity() {
 
                         Navbar(homeScreenViewState)
 
-                        Button(
-
-                            onClick = {
-                                showBottomSheet = true
-                                bottomSheetViewModel.test()
-
-                        },
-                            content = {}
-                        )
-
                         Spacer(modifier = Modifier.height(20.dp))
 
                         ControllPanel(homeScreenViewState)
@@ -98,9 +92,12 @@ class HomeScreen : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        DiagramOfWeeklyWaterIntake(homeScreenViewState)
+                        DiagramOfWeeklyWaterIntake(homeScreenViewState, showBottomSheet) {stateOfBottomSheet ->
+                            showBottomSheet = stateOfBottomSheet.displayBottomSheet
+                            dayBottomSheet = stateOfBottomSheet.dayToDisplay
+                        }
 
-                        if (showBottomSheet) {
+                        if (showBottomSheet == true) {
                             modalBottomSheet(sheetState, BottomSheetViewModel, dayBottomSheet) {visibilityOfBottomSheet -> showBottomSheet = visibilityOfBottomSheet}
                         }
                     }

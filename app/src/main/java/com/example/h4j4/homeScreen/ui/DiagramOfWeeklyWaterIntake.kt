@@ -1,5 +1,6 @@
 package com.example.h4j4.homeScreen.ui
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -11,10 +12,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreenBottomSheet.viewState.StateOfBottomSheet
 import java.time.DayOfWeek
 
+//I have a problem with updating the value of privateDisplayBottomSheet after the first change of value.
 @Composable
-fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
+fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState, stateOfBottomSheet: (StateOfBottomSheet) -> Unit) {
 
     Column(
 
@@ -148,23 +151,57 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
 
                                     if (uiState.whatIsTracked.water) {
 
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.MONDAY)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.TUESDAY)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.WEDNESDAY)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.THURSDAY)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.FRIDAY)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SATURDAY)
-                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SUNDAY)
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.MONDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.TUESDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.WEDNESDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.THURSDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.FRIDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SATURDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+
+                                        OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SUNDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
                                     }
 
                                     else {
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.MONDAY)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.TUESDAY)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.WEDNESDAY)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.THURSDAY)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.FRIDAY)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.SATURDAY)
-                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.SUNDAY)
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.MONDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.TUESDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.WEDNESDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.THURSDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.FRIDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.SATURDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
+                                        OneDayWater(waterDrankThisDay = null, waterToDrinkThisDay = null, representedDayOfWeek = DayOfWeek.SUNDAY) {stateOfBottomSheet ->
+                                            stateOfBottomSheet(StateOfBottomSheet(dayToDisplay = stateOfBottomSheet.dayToDisplay, stateOfBottomSheet.displayBottomSheet))
+                                        }
                                     }
                                 }
 
@@ -172,7 +209,6 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState) {
                                     Text("Failed to load data")
                                 }
                             }
-
                         }
                     )
                 }

@@ -1,6 +1,7 @@
 package com.example.h4j4.homeScreen.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -10,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.homeScreenBottomSheet.viewState.StateOfBottomSheet
 import com.example.h4j4.ui.theme.ProgressIndicatorTrackColor
 import java.time.DayOfWeek
 
 @Composable
-fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, representedDayOfWeek: DayOfWeek) {
+fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, representedDayOfWeek: DayOfWeek, bottomSheetLauncher: (StateOfBottomSheet) -> Unit) {
 
     val progressIndicatorTrackColor = if (waterDrankThisDay != null && waterToDrinkThisDay != null) {
 
@@ -64,7 +66,7 @@ fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, rep
                             .width(20.dp),
 
                         shape = RoundedCornerShape(10.dp),
-                        onClick = {},
+                        onClick = {bottomSheetLauncher(StateOfBottomSheet(dayToDisplay = representedDayOfWeek, displayBottomSheet = true))},
                         content = {}
                     )
                 }
