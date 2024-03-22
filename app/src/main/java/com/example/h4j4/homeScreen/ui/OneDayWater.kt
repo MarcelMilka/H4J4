@@ -10,11 +10,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.BottomSheetLauncher
 import com.example.h4j4.ui.theme.ProgressIndicatorTrackColor
 import java.time.DayOfWeek
 
 @Composable
-fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, representedDayOfWeek: DayOfWeek) {
+fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, representedDayOfWeek: DayOfWeek, bottomSheetLauncher: (BottomSheetLauncher) -> Unit) {
 
     val progressIndicatorTrackColor = if (waterDrankThisDay != null && waterToDrinkThisDay != null) {
 
@@ -64,7 +65,7 @@ fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, rep
                             .width(20.dp),
 
                         shape = RoundedCornerShape(10.dp),
-                        onClick = {},
+                        onClick = {bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = representedDayOfWeek, launch = true))},
                         content = {}
                     )
                 }

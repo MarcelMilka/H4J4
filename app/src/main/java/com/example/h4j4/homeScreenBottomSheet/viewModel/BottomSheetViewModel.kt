@@ -1,25 +1,18 @@
 package com.example.h4j4.homeScreenBottomSheet.viewModel
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.h4j4.homeScreenBottomSheet.viewState.BottomSheetViewState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-object BottomSheetViewModel: ViewModel() {
+class BottomSheetViewModel @Inject constructor() : ViewModel() {
 
     private var _State = MutableStateFlow<BottomSheetViewState>(BottomSheetViewState.Inactive)
     val state get() = _State
-
-    init {
-
-        test()
-    }
-
-    fun test() {
+    fun loadData() {
 
         viewModelScope.launch {
 
