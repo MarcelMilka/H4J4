@@ -26,9 +26,6 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
     private val _weeklyIntakeOfCreatine = me.document("Weekly intake of creatine")
     private val logsOfWaterIntake = me.document("Logs of water intake")
 
-    private val _currentDay: DayOfWeek = LocalDate.now().dayOfWeek
-    private val _currentTime: LocalTime = LocalTime.now()
-
     override suspend fun checkWhatIsTracked(): WhatIsTracked {
 
         return suspendCoroutine { continuation ->
@@ -55,7 +52,9 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
     override suspend fun checkIfNewWeek() {
 
-        if (_currentDay == DayOfWeek.MONDAY) {
+        val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
+
+        if (currentDay == DayOfWeek.MONDAY) {
 
             _weeklyIntakeOfWater
                 .get()
@@ -406,10 +405,13 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
     override suspend fun addAnotherPortionOfWaterToLogs(portion: String) {
 
-        val logsOfCurrentDay = me.document("Logs of water intake")
-            .collection(_currentDay.toString())
+        val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
+        val currentTime: LocalTime = LocalTime.now()
 
-        val newLog = NewLog(amount = portion, time = _currentTime.toString())
+        val logsOfCurrentDay = me.document("Logs of water intake")
+            .collection(currentDay.toString())
+
+        val newLog = NewLog(amount = portion, time = currentTime.toString())
 
         logsOfCurrentDay
             .add(newLog)
@@ -419,8 +421,10 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
     override suspend fun increaseAmountOfDrankWaterToday(finalAmountToUpdate: String) {
 
+        val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
+
         val toUpdate = mutableMapOf<String, Any>()
-        val currentDayAsString = _currentDay.toString().lowercase()
+        val currentDayAsString = currentDay.toString().lowercase()
 
         toUpdate.put(key = currentDayAsString, value = finalAmountToUpdate)
 
