@@ -1,6 +1,7 @@
 package com.example.h4j4.homeScreen.repository
 
 import android.util.Log
+import androidx.compose.ui.text.capitalize
 import com.example.h4j4.homeScreen.HomeScreenInterface
 import com.example.h4j4.homeScreen.viewState.*
 import com.google.firebase.firestore.FirebaseFirestore
@@ -12,6 +13,8 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.suspendCoroutine
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
@@ -21,6 +24,10 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
     private val me = firebase.collection("me")
     private val _weeklyIntakeOfWater = me.document("Weekly intake of water")
     private val _weeklyIntakeOfCreatine = me.document("Weekly intake of creatine")
+    private val logsOfWaterIntake = me.document("Logs of water intake")
+
+    private val _currentDay: DayOfWeek = LocalDate.now().dayOfWeek
+    private val _currentTime: LocalTime = LocalTime.now()
 
     override suspend fun checkWhatIsTracked(): WhatIsTracked {
 
@@ -48,9 +55,7 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
     override suspend fun checkIfNewWeek() {
 
-        val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
-
-        if (currentDay == DayOfWeek.MONDAY) {
+        if (_currentDay == DayOfWeek.MONDAY) {
 
             _weeklyIntakeOfWater
                 .get()
@@ -397,5 +402,31 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
             awaitClose { weeklyWaterAndCreatineIntake.remove() }
         }
+    }
+
+    override suspend fun addAnotherPortionOfWaterToLogs(portion: String) {
+
+        val logsOfCurrentDay = me.document("Logs of water intake")
+            .collection(_currentDay.toString())
+
+        val newLog = NewLog(amount = portion, time = _currentTime.toString())
+
+        logsOfCurrentDay
+            .add(newLog)
+            .addOnSuccessListener { Log.d("addAnotherPortionOfWater", "succeeded to add new portion of water") }
+            .addOnFailureListener { Log.d("addAnotherPortionOfWater", "failed to add new portion of water") }
+    }
+
+    override suspend fun increaseAmountOfDrankWaterToday(finalAmountToUpdate: String) {
+
+        val toUpdate = mutableMapOf<String, Any>()
+        val currentDayAsString = _currentDay.toString().lowercase()
+
+        toUpdate.put(key = currentDayAsString, value = finalAmountToUpdate)
+
+        _weeklyIntakeOfWater
+            .update(toUpdate)
+            .addOnSuccessListener {Log.d("increaseAmountOfDrankWaterToday", "updated successfully")}
+            .addOnFailureListener {Log.d("increaseAmountOfDrankWaterToday", "failed to update")}
     }
 }

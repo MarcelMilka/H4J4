@@ -15,14 +15,21 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 import com.example.h4j4.ui.theme.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
+// TODO: is passing viewModel as a parameter into a composable a bad practice because of coupling programmatically a composable between another file ?
 @Composable
-fun ControllPanel(uiState: HomeScreenViewState) {
+fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) {
 
     val currentDayOfWeek= LocalDate.now().dayOfWeek.toString().lowercase()
+    var waterIngestedToday = 0f
+    var creatineIngestedToday = 0f
 
     Column (
 
@@ -81,7 +88,7 @@ fun ControllPanel(uiState: HomeScreenViewState) {
 
                         is HomeScreenViewState.LoadedSuccessfully -> {
 
-                            val waterIngestedToday = if (uiState.whatIsTracked.water) {
+                            waterIngestedToday = if (uiState.whatIsTracked.water) {
                                 when (currentDayOfWeek) {
                                     "monday" -> uiState.weeklyIntakeOfWater.monday
                                     "tuesday" -> uiState.weeklyIntakeOfWater.tuesday
@@ -99,7 +106,7 @@ fun ControllPanel(uiState: HomeScreenViewState) {
                             }
 
                             val waterToIngestToday = uiState.weeklyIntakeOfWater.dailyGoal.toFloat()
-                            val creatineIngestedToday = if (uiState.whatIsTracked.creatine) {
+                            creatineIngestedToday = if (uiState.whatIsTracked.creatine) {
                                 when (currentDayOfWeek) {
                                     "monday" -> uiState.weeklyIntakeOfCreatine.monday
                                     "tuesday" -> uiState.weeklyIntakeOfCreatine.tuesday
@@ -213,15 +220,30 @@ fun ControllPanel(uiState: HomeScreenViewState) {
                         }
                         is HomeScreenViewState.LoadedSuccessfully -> {
                             if (uiState.whatIsTracked.water) {
-                                AssistChipLoaded(uiState.portionsOfWater.firstPortion)
-                                AssistChipLoaded(uiState.portionsOfWater.secondPortion)
-                                AssistChipLoaded(uiState.portionsOfWater.thirdPortion)
+                                AssistChipLoaded(uiState.portionsOfWater.firstPortion, waterIngestedToday.toInt()) {
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.firstPortion.toString())
+                                    }
+                                }
+                                AssistChipLoaded(uiState.portionsOfWater.secondPortion, waterIngestedToday.toInt()) {
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.secondPortion.toString())
+                                    }
+                                }
+                                AssistChipLoaded(uiState.portionsOfWater.thirdPortion, waterIngestedToday.toInt()) {
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.thirdPortion.toString())
+                                    }
+                                }
                             }
 
                             else {
-                                AssistChipLoaded(0)
-                                AssistChipLoaded(0)
-                                AssistChipLoaded(0)
+                                AssistChipLoaded(0, 0) {}
+                                AssistChipLoaded(0, 0) {}
+                                AssistChipLoaded(0, 0) {}
                             }
                         }
 
@@ -255,15 +277,21 @@ fun ControllPanel(uiState: HomeScreenViewState) {
                         }
                         is HomeScreenViewState.LoadedSuccessfully -> {
                             if (uiState.whatIsTracked.creatine) {
-                                AssistChipLoaded(uiState.portionsOfCreatine.firstPortion)
-                                AssistChipLoaded(uiState.portionsOfCreatine.secondPortion)
-                                AssistChipLoaded(uiState.portionsOfCreatine.thirdPortion)
+                                AssistChipLoaded(uiState.portionsOfCreatine.firstPortion, creatineIngestedToday.toInt()) {
+                                    // TODO: add a function for creatine
+                                }
+                                AssistChipLoaded(uiState.portionsOfCreatine.secondPortion, creatineIngestedToday.toInt()) {
+                                    // TODO: add a function for creatine
+                                }
+                                AssistChipLoaded(uiState.portionsOfCreatine.thirdPortion, creatineIngestedToday.toInt()) {
+                                    // TODO: add a function for creatine
+                                }
                             }
 
                             else {
-                                AssistChipLoaded(0)
-                                AssistChipLoaded(0)
-                                AssistChipLoaded(0)
+                                AssistChipLoaded(0, 0) {}
+                                AssistChipLoaded(0, 0) {}
+                                AssistChipLoaded(0, 0) {}
                             }
                         }
                         HomeScreenViewState.LoadedUnsuccessfully -> TODO()
@@ -335,7 +363,7 @@ fun AssistChipLoading() {
 }
 
 @Composable
-fun AssistChipLoaded(valueOfPortion: Int) {
+fun AssistChipLoaded(valueOfPortion: Int, currentAmountOfDrankWaterToday: Int, calculatedNewValue: (amountOfWaterDrankToday: Int) -> Unit) {
 
     val textToDisplay = if (valueOfPortion != 0) {
         valueOfPortion.toString()
@@ -353,7 +381,7 @@ fun AssistChipLoaded(valueOfPortion: Int) {
         onClick = {
 
             if (valueOfPortion != 0) {
-                // TODO: function which adds another portion
+                calculatedNewValue(currentAmountOfDrankWaterToday + valueOfPortion)
             }
             else {
                 // TODO: function which directs to settings

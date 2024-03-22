@@ -81,4 +81,10 @@ class HomeScreenViewModel @Inject constructor(private val repository: HomeScreen
             _isRefreshing.emit(false)
         }
     }
+
+    suspend fun increaseAmountOfDrankWaterAndAddLog(updatedAmountOfWaterDrankToday: String, portionOfWater: String) {
+
+        repository.increaseAmountOfDrankWaterToday(updatedAmountOfWaterDrankToday)
+        repository.addAnotherPortionOfWaterToLogs(portionOfWater)
+    }
 }
