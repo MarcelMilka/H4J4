@@ -1,8 +1,6 @@
 package com.example.h4j4.homeScreenBottomSheet.view
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,8 +25,8 @@ fun modalBottomSheet(
 ) {
 
     if (bottomSheetLauncher.launch) {
-//
-//        bottomSheetViewModel.loadData()
+
+        bottomSheetViewModel.loadData()
 
         ModalBottomSheet(
 
@@ -80,8 +78,7 @@ fun modalBottomSheet(
                             }
 
                             is BottomSheetViewState.LoadedSuccessfully -> {
-
-                                Text("${uiState.fetchedLogs}")
+                                Text(uiState.logs)
                             }
                             BottomSheetViewState.LoadedUnsuccessfully -> {
                                 Text(text = "Failed to load data", color = Color.White)
