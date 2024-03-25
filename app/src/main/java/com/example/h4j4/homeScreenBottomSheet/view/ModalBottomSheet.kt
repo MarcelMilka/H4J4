@@ -22,9 +22,7 @@ import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.homeScreenBottomSheet.viewState.BottomSheetViewState
 import com.example.h4j4.ui.theme.Sixty
-import com.google.type.DateTime
 import java.time.DayOfWeek
-import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -113,12 +111,12 @@ fun modalBottomSheet(
 
                                             items(uiState.fetchedLogs.dropLast(1)) {
 
-                                                log(time = it.time, amount = it.amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine, representedDayOfWeek = bottomSheetLauncher.dayOfWeek)
+                                                log(time = it.time, amount = it.amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine)
                                                 Divider(modifier = Modifier.height(0.25.dp))
                                             }
 
                                             item {
-                                                log(time = uiState.fetchedLogs.last().time, amount = uiState.fetchedLogs.last().amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine, representedDayOfWeek = bottomSheetLauncher.dayOfWeek)
+                                                log(time = uiState.fetchedLogs.last().time, amount = uiState.fetchedLogs.last().amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine)
                                             }
                                         }
                                     )
@@ -140,13 +138,7 @@ fun modalBottomSheet(
     }
 }
 
-@Composable fun log (time: String, amount: String, waterOrCreatine: WaterOrCreatine, representedDayOfWeek: DayOfWeek) {
-
-
-    val enabledToDelete = if (LocalDate.now().dayOfWeek == representedDayOfWeek) {
-        true
-    } else {false}
-
+@Composable fun log (time: String, amount: String, waterOrCreatine: WaterOrCreatine) {
 
     val suffix = when (waterOrCreatine) {
         WaterOrCreatine.WATER -> {
@@ -196,8 +188,6 @@ fun modalBottomSheet(
                     IconButton(
 
                         onClick = {},
-
-                        enabled = enabledToDelete,
 
                         content = {
                             Icon(
