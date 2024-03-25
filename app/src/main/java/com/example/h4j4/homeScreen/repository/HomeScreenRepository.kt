@@ -1,8 +1,6 @@
 package com.example.h4j4.homeScreen.repository
 
 import android.util.Log
-import androidx.compose.ui.text.capitalize
-import com.example.h4j4.homeScreen.HomeScreenInterface
 import com.example.h4j4.homeScreen.viewState.*
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +11,6 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.suspendCoroutine
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -407,11 +404,12 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
         val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
         val currentTime: LocalTime = LocalTime.now()
+        val timeToPush = "${currentTime.hour}:${currentTime.minute}"
 
         val logsOfCurrentDay = me.document("Logs of water intake")
             .collection(currentDay.toString())
 
-        val newLog = NewLog(amount = portion, time = currentTime.toString())
+        val newLog = NewLog(amount = portion, time = timeToPush)
 
         logsOfCurrentDay
             .add(newLog)

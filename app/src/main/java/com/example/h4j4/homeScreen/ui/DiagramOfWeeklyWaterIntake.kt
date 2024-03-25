@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.BottomSheetLauncher
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import java.time.DayOfWeek
 
 @Composable
@@ -150,31 +151,31 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState, bottomSheetLauncher
                                     if (uiState.whatIsTracked.water) {
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.monday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.MONDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.tuesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.TUESDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.wednesday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.WEDNESDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.thursday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.THURSDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.friday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.FRIDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.saturday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SATURDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
 
                                         OneDayWater(waterDrankThisDay = uiState.weeklyIntakeOfWater.sunday, waterToDrinkThisDay = uiState.weeklyIntakeOfWater.dailyGoal, representedDayOfWeek = DayOfWeek.SUNDAY) {
-                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch))
+                                            bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.WATER))
                                         }
                                     }
 

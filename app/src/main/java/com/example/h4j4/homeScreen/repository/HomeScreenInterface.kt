@@ -1,4 +1,4 @@
-package com.example.h4j4.homeScreen
+package com.example.h4j4.homeScreen.repository
 
 import android.util.Log
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState

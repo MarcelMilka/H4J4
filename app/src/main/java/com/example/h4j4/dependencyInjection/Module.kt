@@ -1,6 +1,6 @@
 package com.example.h4j4.dependencyInjection
 
-import com.example.h4j4.homeScreen.HomeScreenInterface
+import com.example.h4j4.homeScreen.repository.HomeScreenInterface
 import com.example.h4j4.homeScreen.repository.HomeScreenRepository
 import dagger.Binds
 import dagger.Module

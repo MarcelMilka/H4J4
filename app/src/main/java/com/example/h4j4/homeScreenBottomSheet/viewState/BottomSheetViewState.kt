@@ -6,7 +6,7 @@ sealed class BottomSheetViewState {
 
     object Loading: BottomSheetViewState()
 
-    data class LoadedSuccessfully(val logs: String): BottomSheetViewState()
+    data class LoadedSuccessfully(val fetchedLogs: List<WaterOrCreatineLog>): BottomSheetViewState()
 
     object LoadedUnsuccessfully: BottomSheetViewState()
 }

@@ -29,6 +29,7 @@ import com.example.h4j4.homeScreen.ui.Navbar
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreenBottomSheet.view.modalBottomSheet
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.ui.theme.Sixty
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
@@ -65,7 +66,7 @@ class HomeScreen : ComponentActivity() {
                 val sheetState = rememberModalBottomSheetState()
                 val scope = rememberCoroutineScope()
 
-                var bottomSheetLauncher by remember { mutableStateOf(BottomSheetLauncher(dayOfWeek = DayOfWeek.MONDAY, false)) }
+                var bottomSheetLauncher by remember { mutableStateOf(BottomSheetLauncher(dayOfWeek = DayOfWeek.MONDAY, false, WaterOrCreatine.WATER)) }
 
                 Column(
 
