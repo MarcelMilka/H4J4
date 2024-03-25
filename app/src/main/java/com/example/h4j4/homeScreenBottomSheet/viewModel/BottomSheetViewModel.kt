@@ -39,6 +39,12 @@ class BottomSheetViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun deleteLog (waterOrCreatineLog: WaterOrCreatineLog, nameOfTheLog: String) {
+
+        viewModelScope.launch {
+        }
+    }
+
     fun leaveBottomSheetViewModel() {
         viewModelScope.launch {
             _State.emit(BottomSheetViewState.Inactive)
