@@ -21,8 +21,10 @@ import com.example.h4j4.BottomSheetLauncher
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.homeScreenBottomSheet.viewState.BottomSheetViewState
+import com.example.h4j4.homeScreenBottomSheet.viewState.WaterOrCreatineLog
 import com.example.h4j4.ui.theme.Sixty
 import java.time.DayOfWeek
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +32,8 @@ fun modalBottomSheet(
     sheetState: SheetState,
     bottomSheetViewModel: BottomSheetViewModel,
     bottomSheetLauncher: BottomSheetLauncher,
-    bottomSheetWithdrawal: (BottomSheetLauncher) -> Unit
+    bottomSheetWithdrawal: (BottomSheetLauncher) -> Unit,
+    deleteTheLog: (WaterOrCreatineLog) -> Unit
 ) {
 
     if (bottomSheetLauncher.launch) {
@@ -95,10 +98,6 @@ fun modalBottomSheet(
 
                                 else {
 
-                                    val allLogs = uiState.fetchedLogs
-                                    val logsWithDivider = mutableListOf(allLogs.dropLast(1))
-                                    val theLastLog = mutableListOf(allLogs.last())
-
                                     LazyColumn (
 
                                         modifier = Modifier
@@ -109,14 +108,18 @@ fun modalBottomSheet(
 
                                         content = {
 
-                                            items(uiState.fetchedLogs.dropLast(1)) {
+                                            items(uiState.fetchedLogs.dropLast(1)) { waterOrCreatineLog ->
 
-                                                log(time = it.time, amount = it.amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine)
+                                                log(informationAboutTheLog = waterOrCreatineLog, waterOrCreatine = bottomSheetLauncher.waterOrCreatine, representedDayOfWeek = bottomSheetLauncher.dayOfWeek) {
+                                                    deleteTheLog(waterOrCreatineLog)
+                                                }
                                                 Divider(modifier = Modifier.height(0.25.dp))
                                             }
 
                                             item {
-                                                log(time = uiState.fetchedLogs.last().time, amount = uiState.fetchedLogs.last().amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine)
+                                                log(informationAboutTheLog = uiState.fetchedLogs.last(), waterOrCreatine = bottomSheetLauncher.waterOrCreatine, representedDayOfWeek = bottomSheetLauncher.dayOfWeek) {
+                                                    deleteTheLog(uiState.fetchedLogs.last())
+                                                }
                                             }
                                         }
                                     )
@@ -138,7 +141,13 @@ fun modalBottomSheet(
     }
 }
 
-@Composable fun log (time: String, amount: String, waterOrCreatine: WaterOrCreatine) {
+@Composable fun log (informationAboutTheLog: WaterOrCreatineLog, waterOrCreatine: WaterOrCreatine, representedDayOfWeek: DayOfWeek, deleteTheLog: (nameOfTheLog: String) -> Unit) {
+
+    val enabledToDelete = if (LocalDate.now().dayOfWeek == representedDayOfWeek) {
+        true
+    } else {
+        false
+    }
 
     val suffix = when (waterOrCreatine) {
         WaterOrCreatine.WATER -> {
@@ -170,8 +179,8 @@ fun modalBottomSheet(
 
                 content = {
 
-                    Text(text = "$amount $suffix", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.W500)
-                    Text(text = time, fontSize = 10.sp, color = Color.White, fontWeight = FontWeight.W300)
+                    Text(text = "${informationAboutTheLog.amount} $suffix", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.W500)
+                    Text(text = informationAboutTheLog.time, fontSize = 10.sp, color = Color.White, fontWeight = FontWeight.W300)
                 }
             )
 
@@ -185,19 +194,22 @@ fun modalBottomSheet(
 
                 content = {
 
-                    IconButton(
+                    if (enabledToDelete) {
 
-                        onClick = {},
+                        IconButton(
 
-                        content = {
-                            Icon(
+                            onClick = {deleteTheLog(informationAboutTheLog.nameOfTheLog)},
 
-                                imageVector = Icons.Rounded.Delete,
-                                tint = Color.White,
-                                contentDescription = null
-                            )
-                        }
-                    )
+                            content = {
+                                Icon(
+
+                                    imageVector = Icons.Rounded.Delete,
+                                    tint = Color.White,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
                 }
             )
         }

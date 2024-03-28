@@ -15,7 +15,7 @@ interface HomeScreenInterface {
     suspend fun checkIfNewWeek()
     suspend fun loadData(whatIsTracked: WhatIsTracked?): MyUnit
     suspend fun loadChanges(homeScreenViewState: HomeScreenViewState.LoadedSuccessfully) : kotlinx.coroutines.flow.Flow<LoadChangesUnit>
-
     suspend fun addAnotherPortionOfWaterToLogs(portion: String)
     suspend fun increaseAmountOfDrankWaterToday(finalAmountToUpdate: String)
+    suspend fun decreaseAmountOfDrankWaterToday(finalAmountToUpdate: String)
 }
