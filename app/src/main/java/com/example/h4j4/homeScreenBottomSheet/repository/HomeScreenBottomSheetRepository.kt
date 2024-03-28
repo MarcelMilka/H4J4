@@ -1,7 +1,6 @@
 package com.example.h4j4.homeScreenBottomSheet.repository
 
 import android.util.Log
-import com.example.h4j4.homeScreen.viewState.WeeklyIntakeOfWater
 import com.example.h4j4.homeScreenBottomSheet.viewState.WaterOrCreatineLog
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.DayOfWeek

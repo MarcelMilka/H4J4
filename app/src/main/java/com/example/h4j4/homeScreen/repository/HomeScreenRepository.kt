@@ -431,14 +431,4 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
             .addOnSuccessListener {Log.d("increaseAmountOfDrankWaterToday", "updated successfully")}
             .addOnFailureListener {Log.d("increaseAmountOfDrankWaterToday", "failed to update")}
     }
-
-    override suspend fun decreaseAmountOfDrankWaterToday(finalAmountToUpdate: String) {
-
-        val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
-
-        val map = mutableMapOf<String, Any>()
-        map.put(currentDay.toString(), finalAmountToUpdate)
-
-        _weeklyIntakeOfWater.update(map)
-    }
 }
