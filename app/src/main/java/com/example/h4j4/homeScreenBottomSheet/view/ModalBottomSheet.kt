@@ -1,7 +1,5 @@
 package com.example.h4j4.homeScreenBottomSheet.view
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,15 +12,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.h4j4.BottomSheetLauncher
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
-import com.example.h4j4.homeScreenBottomSheet.viewState.BottomSheetViewState
+import com.example.h4j4.homeScreenBottomSheet.viewState.HomeScreenBottomSheetViewState
+import com.example.h4j4.homeScreenBottomSheet.viewState.WaterOrCreatineLog
 import com.example.h4j4.ui.theme.Sixty
 import java.time.DayOfWeek
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +29,8 @@ fun modalBottomSheet(
     sheetState: SheetState,
     bottomSheetViewModel: BottomSheetViewModel,
     bottomSheetLauncher: BottomSheetLauncher,
-    bottomSheetWithdrawal: (BottomSheetLauncher) -> Unit
+    bottomSheetWithdrawal: (BottomSheetLauncher) -> Unit,
+    deleteTheLog: (dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfDrankWater: Int, amountOfWaterToDecrease: Int) -> Unit
 ) {
 
     if (bottomSheetLauncher.launch) {
@@ -82,11 +82,11 @@ fun modalBottomSheet(
                         Divider(modifier = Modifier.height(2.dp))
 
                         when (uiState) {
-                            BottomSheetViewState.Loading -> {
+                            HomeScreenBottomSheetViewState.Loading -> {
                                 Text(text = "Loading", color = Color.White)
                             }
 
-                            is BottomSheetViewState.LoadedSuccessfully -> {
+                            is HomeScreenBottomSheetViewState.LoadedSuccessfully -> {
 
                                 if (uiState.fetchedLogs.isEmpty()) {
 
@@ -94,10 +94,6 @@ fun modalBottomSheet(
                                 }
 
                                 else {
-
-                                    val allLogs = uiState.fetchedLogs
-                                    val logsWithDivider = mutableListOf(allLogs.dropLast(1))
-                                    val theLastLog = mutableListOf(allLogs.last())
 
                                     LazyColumn (
 
@@ -109,25 +105,50 @@ fun modalBottomSheet(
 
                                         content = {
 
-                                            items(uiState.fetchedLogs.dropLast(1)) {
+                                            val currentAmountOfDrankWater = when (bottomSheetLauncher.dayOfWeek) {
 
-                                                log(time = it.time, amount = it.amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine)
+                                                DayOfWeek.MONDAY -> {uiState.weeklyIntakeOfWater.monday}
+                                                DayOfWeek.TUESDAY -> {uiState.weeklyIntakeOfWater.tuesday}
+                                                DayOfWeek.WEDNESDAY -> {uiState.weeklyIntakeOfWater.wednesday}
+                                                DayOfWeek.THURSDAY -> {uiState.weeklyIntakeOfWater.thursday}
+                                                DayOfWeek.FRIDAY -> {uiState.weeklyIntakeOfWater.friday}
+                                                DayOfWeek.SATURDAY -> {uiState.weeklyIntakeOfWater.saturday}
+                                                DayOfWeek.SUNDAY -> {uiState.weeklyIntakeOfWater.sunday}
+                                            }
+
+                                            items(uiState.fetchedLogs.dropLast(1)) { waterOrCreatineLog ->
+
+                                                log(bottomSheetLauncher.dayOfWeek, waterOrCreatineLog, waterOrCreatine = bottomSheetLauncher.waterOrCreatine) {
+                                                    deleteTheLog(
+                                                        bottomSheetLauncher.dayOfWeek,
+                                                        waterOrCreatineLog.nameOfTheLog,
+                                                        currentAmountOfDrankWater,
+                                                        waterOrCreatineLog.amount.toInt()
+                                                    )
+                                                }
                                                 Divider(modifier = Modifier.height(0.25.dp))
                                             }
 
                                             item {
-                                                log(time = uiState.fetchedLogs.last().time, amount = uiState.fetchedLogs.last().amount, waterOrCreatine = bottomSheetLauncher.waterOrCreatine)
+                                                log(bottomSheetLauncher.dayOfWeek, uiState.fetchedLogs.last(), waterOrCreatine = bottomSheetLauncher.waterOrCreatine) {
+                                                    deleteTheLog(
+                                                        bottomSheetLauncher.dayOfWeek,
+                                                        uiState.fetchedLogs.last().nameOfTheLog,
+                                                        currentAmountOfDrankWater,
+                                                        uiState.fetchedLogs.last().amount.toInt()
+                                                    )
+                                                }
                                             }
                                         }
                                     )
                                 }
                             }
 
-                            BottomSheetViewState.LoadedUnsuccessfully -> {
+                            HomeScreenBottomSheetViewState.LoadedUnsuccessfully -> {
                                 Text(text = "Failed to load data", color = Color.White)
                             }
 
-                            BottomSheetViewState.Inactive -> {
+                            HomeScreenBottomSheetViewState.Inactive -> {
 
                             }
                         }
@@ -138,7 +159,15 @@ fun modalBottomSheet(
     }
 }
 
-@Composable fun log (time: String, amount: String, waterOrCreatine: WaterOrCreatine) {
+@Composable fun log (representedDayOfWeek: DayOfWeek ,informationAboutTheLog: WaterOrCreatineLog, waterOrCreatine: WaterOrCreatine, deleteTheLog: () -> Unit) {
+
+    val enabledToDelete = if (LocalDate.now().dayOfWeek == representedDayOfWeek) {
+        true
+    }
+
+    else {
+        false
+    }
 
     val suffix = when (waterOrCreatine) {
         WaterOrCreatine.WATER -> {
@@ -170,8 +199,8 @@ fun modalBottomSheet(
 
                 content = {
 
-                    Text(text = "$amount $suffix", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.W500)
-                    Text(text = time, fontSize = 10.sp, color = Color.White, fontWeight = FontWeight.W300)
+                    Text(text = "${informationAboutTheLog.amount} $suffix", fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.W500)
+                    Text(text = informationAboutTheLog.time, fontSize = 10.sp, color = Color.White, fontWeight = FontWeight.W300)
                 }
             )
 
@@ -185,19 +214,21 @@ fun modalBottomSheet(
 
                 content = {
 
-                    IconButton(
+                    if (enabledToDelete) {
+                        IconButton(
 
-                        onClick = {},
+                            onClick = {deleteTheLog()},
 
-                        content = {
-                            Icon(
+                            content = {
+                                Icon(
 
-                                imageVector = Icons.Rounded.Delete,
-                                tint = Color.White,
-                                contentDescription = null
-                            )
-                        }
-                    )
+                                    imageVector = Icons.Rounded.Delete,
+                                    tint = Color.White,
+                                    contentDescription = null
+                                )
+                            }
+                        )
+                    }
                 }
             )
         }

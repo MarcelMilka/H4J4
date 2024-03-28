@@ -98,10 +98,23 @@ class HomeScreen : ComponentActivity() {
                             Log.d("control of bottom sheet launcher", "$bottomSheetLauncher")
                         }
 
-                        modalBottomSheet(sheetState, bottomSheetViewModel, bottomSheetLauncher) {bottomSheetWithdrawal ->
-                            bottomSheetLauncher = bottomSheetWithdrawal
-                            Log.d("control of bottom sheet launcher", "$bottomSheetLauncher")
-                        }
+                        modalBottomSheet(
+                            sheetState = sheetState,
+                            bottomSheetViewModel = bottomSheetViewModel,
+                            bottomSheetLauncher = bottomSheetLauncher,
+
+                            bottomSheetWithdrawal = {bottomSheetWithdrawal -> bottomSheetLauncher = bottomSheetWithdrawal},
+
+                            deleteTheLog = {dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfDrankWater: Int, amountOfWaterToDecrease: Int ->
+
+                                bottomSheetViewModel.deleteTheLogAndDecreaseAmountOfDrankWater(
+                                    dayOfWeek = dayOfWeek,
+                                    nameOfTheLog = nameOfTheLog,
+                                    currentAmountOfDrankWater = currentAmountOfDrankWater,
+                                    amountOfWaterToDecrease = amountOfWaterToDecrease
+                                )
+                            }
+                        )
                     }
                 )
 
