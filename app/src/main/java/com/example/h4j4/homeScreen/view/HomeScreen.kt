@@ -1,5 +1,6 @@
 package com.example.h4j4.homeScreen.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -31,6 +32,7 @@ import com.example.h4j4.homeScreenBottomSheet.view.modalBottomSheet
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.ui.theme.Sixty
+import com.example.h4j4.user.view.User
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import javax.inject.Inject
@@ -81,7 +83,7 @@ class HomeScreen : ComponentActivity() {
 
                     content = {
 
-                        Navbar(homeScreenViewState)
+                        Navbar(homeScreenViewState) {startActivity(Intent(this@HomeScreen, User::class.java))}
 
                         Spacer(modifier = Modifier.height(20.dp))
 
