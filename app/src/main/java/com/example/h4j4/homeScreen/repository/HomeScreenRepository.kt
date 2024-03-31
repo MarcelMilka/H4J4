@@ -15,7 +15,7 @@ import java.time.LocalTime
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
-open class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
+class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
     private val firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val me = firebase.collection("me")
@@ -143,7 +143,7 @@ open class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
         }
     }
 
-    override suspend fun loadData(whatIsTracked: WhatIsTracked?): HomeScreenUnit {
+    override suspend fun loadData(whatIsTracked: WhatIsTracked?): MyUnit {
 
         val portionsOfWater = PortionsOfWater(0, 0, 0)
         val portionsOfCreatine = PortionsOfCreatine(0, 0, 0)
@@ -285,7 +285,7 @@ open class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
                     }
 
                     continuation.resume(
-                        HomeScreenUnit(
+                        MyUnit(
                             streak = streak,
                             weeklyIntakeOfWater = weeklyIntakeOfWater,
                             weeklyIntakeOfCreatine = weeklyIntakeOfCreatine,

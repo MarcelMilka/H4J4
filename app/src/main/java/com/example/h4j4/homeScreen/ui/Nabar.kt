@@ -22,7 +22,7 @@ import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
 import javax.annotation.meta.When
 
 @Composable
-fun Navbar(uiState: HomeScreenViewState, navigateToUser: () -> Unit) {
+fun Navbar(uiState: HomeScreenViewState) {
 
     Row(
 
@@ -110,7 +110,7 @@ fun Navbar(uiState: HomeScreenViewState, navigateToUser: () -> Unit) {
 
             IconButton(
 
-                onClick = {navigateToUser()},
+                onClick = {},
                 content = {
 
                     Icon(
