@@ -1,6 +1,6 @@
 package com.example.h4j4.homeScreen.viewState
 
-data class MyUnit(
+data class HomeScreenUnit(
     var streak: Streak,
     var weeklyIntakeOfWater: WeeklyIntakeOfWater,
     var weeklyIntakeOfCreatine: WeeklyIntakeOfCreatine,

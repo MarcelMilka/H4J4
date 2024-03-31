@@ -1,5 +1,6 @@
 package com.example.h4j4.homeScreen.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -11,9 +12,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,7 +29,7 @@ import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreenBottomSheet.view.modalBottomSheet
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
-import com.example.h4j4.ui.theme.Sixty
+import com.example.h4j4.user.view.User
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
 import javax.inject.Inject
@@ -64,7 +63,9 @@ class HomeScreen : ComponentActivity() {
 
 //                Modal bottom sheet
                 val sheetState = rememberModalBottomSheetState()
-                val scope = rememberCoroutineScope()
+
+//                Navigate to the activity "User"
+                val navigateToUser = Intent(this@HomeScreen, User::class.java)
 
                 var bottomSheetLauncher by remember { mutableStateOf(BottomSheetLauncher(dayOfWeek = DayOfWeek.MONDAY, false, WaterOrCreatine.WATER)) }
 
@@ -81,7 +82,7 @@ class HomeScreen : ComponentActivity() {
 
                     content = {
 
-                        Navbar(homeScreenViewState)
+                        Navbar(homeScreenViewState) {startActivity(navigateToUser)}
 
                         Spacer(modifier = Modifier.height(20.dp))
 
