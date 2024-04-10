@@ -1,4 +1,4 @@
-package com.example.h4j4.user.ui
+package com.example.h4j4.user.ui.mainComponents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
