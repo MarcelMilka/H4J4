@@ -1,6 +1,5 @@
 package com.example.h4j4.user.ui.mainComponents
 
-import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -128,62 +127,6 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
 //    Portion
     var portion by remember {mutableStateOf(portionSize)}
-    var stateOfPortion by remember {
-
-        mutableStateOf(
-
-            when (portionSize) {
-
-                0 -> {
-                    StateOfPortion.DoesNotExist
-                }
-
-                else -> {
-                    StateOfPortion.Exists
-                }
-            }
-        )
-    }
-
-//    First IconButton
-    var iconOfFirstIconButton by remember {
-
-        mutableStateOf(
-            when (portion) {
-
-                0 -> {Icons.Rounded.Add}
-
-                else -> {Icons.Rounded.Edit}
-            }
-        )
-
-    }
-    var tintOfFirstIconButton by remember { mutableStateOf(Color.White) }
-    var firstIconButtonIsClickable by remember { mutableStateOf(true) }
-
-//    OutlinedTextField
-    var isReadOnly by remember { mutableStateOf(true) }
-    var isVisible by remember {
-        mutableStateOf(
-
-            when (portion) {
-
-                0 -> {false}
-
-                else -> {true}
-            }
-        )
-    }
-
-//    Second IconButton
-    var tintOfSecondIconButton by remember { mutableStateOf(Color.Transparent) }
-    var secondIconButtonIsClickable by remember { mutableStateOf(false) }
-
-//    Dialog
-    var displayDialog by remember { mutableStateOf(false) }
-    var dismissed: Boolean? by remember { mutableStateOf(null) }
-    var confirmed: Boolean? by remember { mutableStateOf(null) }
-
 
     Row(
 
@@ -196,111 +139,6 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
         content = {
 
-//            IconButton responsible for adding/editing the portion
-            MyIconButton(iconOfFirstIconButton, tintOfFirstIconButton, firstIconButtonIsClickable) {
-
-                when (stateOfPortion) {
-
-                    StateOfPortion.DoesNotExist -> {
-
-                        stateOfPortion = StateOfPortion.IsBeingCreated
-
-//                        LeftIconButton
-                        iconOfFirstIconButton = Icons.Rounded.Check
-
-//                        OutlinedTextField
-                        isVisible = true
-                        isReadOnly = false
-
-//                        RightIconButton
-                        tintOfSecondIconButton = Color.White
-                        secondIconButtonIsClickable = true
-
-                    }
-
-                    StateOfPortion.IsBeingCreated -> {}
-
-                    StateOfPortion.Exists -> {}
-
-                    StateOfPortion.IsBeingEdited -> {}
-                }
-            }
-
-            MyOutlinedTextield(value = portion, suffix = "ml", readOnly = isReadOnly, isVisible = isVisible) {changedValue ->
-                portion = changedValue
-            }
-
-//            IconButton responsible for deleting permanently portion / deleting changes
-            MyIconButton(Icons.Rounded.Delete, tintOfSecondIconButton, secondIconButtonIsClickable) {
-
-                when (stateOfPortion) {
-
-                    StateOfPortion.DoesNotExist -> {}
-
-                    StateOfPortion.IsBeingCreated -> {
-                        displayDialog = true
-                    }
-
-                    StateOfPortion.Exists -> TODO()
-
-                    StateOfPortion.IsBeingEdited -> TODO()
-
-                }
-            }
-
-            if (displayDialog) {
-
-                val descriptionOfTheDialog = when (stateOfPortion) {
-
-                    StateOfPortion.Exists -> {"Are you sure you want to delete this portion?"}
-
-                    StateOfPortion.IsBeingCreated -> {"Are you sure you want to cancel adding new portion?"}
-
-                    StateOfPortion.IsBeingEdited -> {"Are you sure you want to delete changes for this portion?"}
-
-                    StateOfPortion.DoesNotExist -> TODO()
-                }
-
-                MyAlertDialog(
-                    text = descriptionOfTheDialog,
-
-                    onDismissRequest = {
-                        dismissed = true
-                        confirmed = false
-
-                        displayDialog = false
-                    },
-
-                    onClickConfirmButton = {
-                        dismissed = true
-                        confirmed = false
-
-//                        Overall settings
-                        stateOfPortion = StateOfPortion.DoesNotExist
-
-//                        Left icon
-                        iconOfFirstIconButton = Icons.Rounded.Add
-
-//                        OutlinedTextField
-                        isVisible = false
-
-//                        Right icon
-                        tintOfSecondIconButton = Color.Transparent
-                        secondIconButtonIsClickable = false
-
-//                        Hide dialog
-                        displayDialog = false
-                    },
-
-                    onClickDismissButton = {
-
-                        dismissed = true
-                        confirmed = false
-
-                        displayDialog = false
-                    }
-                )
-            }
         }
     )
 }
