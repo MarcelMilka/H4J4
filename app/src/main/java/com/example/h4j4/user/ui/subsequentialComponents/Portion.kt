@@ -38,14 +38,13 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
 //    IconButton responsible for adding, editing and saving the portion.
     var icon by remember { mutableStateOf(Icons.Rounded.Add) }
-
     var tint by remember { mutableStateOf(Color.White) }
-
     var isClickable by remember { mutableStateOf(true) }
 
 //    OutlinedTextField
     var displayOutlinedTextField by remember { mutableStateOf(false) }
     var focusRequester by remember { mutableStateOf(FocusRequester()) }
+    var isEnabled by remember { mutableStateOf(false) }
 
 //    Dialog
     var displayDialog by remember { mutableStateOf(false) }
@@ -68,9 +67,7 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
             }
             StateOfPortion.IsBeingCreated -> {
                 icon = Icons.Rounded.Check
-                tint = if (portion == 0) {
-                    Color.Red} else {
-                    Color.White}
+                tint = if (portion == 0) { Color.Red} else { Color.White}
                 isClickable = if (portion == 0) {false} else {true}
                 displayOutlinedTextField = true
             }
@@ -82,9 +79,7 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
             }
             StateOfPortion.IsBeingEdited -> {
                 icon = Icons.Rounded.Check
-                tint = if (portion == 0) {
-                    Color.Red} else {
-                    Color.White}
+                tint = if (portion == 0) {Color.Red} else {Color.White}
                 isClickable = if (portion == 0) {false} else {true}
                 displayOutlinedTextField = true
             }
@@ -108,16 +103,20 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                 when (stateOfPortion) {
                     StateOfPortion.DoesNotExist -> { // icon add
                         stateOfPortion = StateOfPortion.IsBeingCreated
+                        isEnabled = true
                     }
                     StateOfPortion.IsBeingCreated -> { // icon check
                         stateOfPortion = StateOfPortion.Exists
+                        isEnabled = false
                     }
                     StateOfPortion.Exists -> { // icon edit
                         stateOfPortion = StateOfPortion.IsBeingEdited
+                        isEnabled = true
                     }
 
                     StateOfPortion.IsBeingEdited -> { // icon check
                         stateOfPortion = StateOfPortion.Exists
+                        isEnabled = false
                     }
                 }
 
@@ -125,7 +124,7 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
             if (displayOutlinedTextField) {
 
-                MyOutlinedTextield(value = portion, suffix = "ml", readOnly = false, isVisible = true, focusRequester = focusRequester) {
+                MyOutlinedTextield(value = portion, suffix = "ml", isEnabled = isEnabled, isVisible = true, focusRequester = focusRequester) {
                     portion = it
                 }
 

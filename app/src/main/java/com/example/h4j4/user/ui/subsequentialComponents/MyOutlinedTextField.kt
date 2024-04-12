@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.h4j4.ui.theme.UnfocusedTextFieldWhiteElement
 
 
-@Composable fun MyOutlinedTextield(value: Int, suffix: String, readOnly: Boolean, isVisible: Boolean, focusRequester: FocusRequester, changedValue:(Int) -> Unit) {
+@Composable fun MyOutlinedTextield(value: Int, suffix: String, isEnabled: Boolean, isVisible: Boolean, focusRequester: FocusRequester, changedValue:(Int) -> Unit) {
 
     var valueToDisplay by remember { mutableStateOf(value.toString()) }
     var focusController by remember { mutableStateOf(focusRequester) }
@@ -65,7 +65,7 @@ import com.example.h4j4.ui.theme.UnfocusedTextFieldWhiteElement
             suffix = { Text(suffix) },
 
             isError = isError,
-            enabled = false,
+            enabled = isEnabled,
             singleLine = true,
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
 
