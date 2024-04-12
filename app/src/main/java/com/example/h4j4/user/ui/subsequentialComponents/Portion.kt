@@ -46,6 +46,8 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 //    OutlinedTextField
     var displayOutlinedTextField by remember { mutableStateOf(false) }
     var focusRequester by remember { mutableStateOf(FocusRequester()) }
+    var isEnabled by remember { mutableStateOf(false) }
+
 
 //    Dialog
     var displayDialog by remember { mutableStateOf(false) }
@@ -125,7 +127,7 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
             if (displayOutlinedTextField) {
 
-                MyOutlinedTextield(value = portion, suffix = "ml", readOnly = false, isVisible = true, focusRequester = focusRequester) {
+                MyOutlinedTextield(value = portion, suffix = "ml", isEnabled = isEnabled, isVisible = true, focusRequester = focusRequester) {
                     portion = it
                 }
 
@@ -133,7 +135,9 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
                     when (stateOfPortion) {
                         StateOfPortion.DoesNotExist -> {}
-                        StateOfPortion.IsBeingCreated -> {displayDialog = true}
+                        StateOfPortion.IsBeingCreated -> {
+                            displayDialog = true
+                        }
                         StateOfPortion.Exists -> {displayDialog = true}
                         StateOfPortion.IsBeingEdited -> {displayDialog = true}
                     }
