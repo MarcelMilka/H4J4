@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.user.enumClasses.StateOfPortion
-
+// Well, I applied suggested by you changes - and it does not work. Here are two composable functions. Launching of the keyboard happens between them.
 @Composable
 fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
@@ -48,6 +50,12 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 
 //    Dialog
     var displayDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(enableOutlinedTextField) {
+        if (enableOutlinedTextField) {
+            focusRequester.requestFocus()
+        }
+    }
 
     LaunchedEffect(stateOfPortion, portion) {
 
@@ -101,8 +109,8 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                 when (stateOfPortion) {
                     StateOfPortion.DoesNotExist -> { // icon add
                         stateOfPortion = StateOfPortion.IsBeingCreated
-                        enableOutlinedTextField = true
-                        focusRequester.requestFocus()
+                        enableOutlinedTextField = false
+                        focusRequester.freeFocus()
                     }
                     StateOfPortion.IsBeingCreated -> { // icon check
                         stateOfPortion = StateOfPortion.Exists
@@ -156,20 +164,37 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                 MyAlertDialog(
                     text = descriptionOfTheDialog,
 
-                    onDismissRequest = {displayDialog = false},
+                    onDismissRequest = {
+                        enableOutlinedTextField = false
+                        displayDialog = false
+                        enableOutlinedTextField = true
+                    },
 
                     onClickConfirmButton = {
                         displayDialog = false
 
                         when (stateOfPortion) {
                             StateOfPortion.DoesNotExist -> {}
-                            StateOfPortion.IsBeingCreated -> {stateOfPortion = StateOfPortion.DoesNotExist}
-                            StateOfPortion.IsBeingEdited -> {stateOfPortion = StateOfPortion.Exists}
-                            StateOfPortion.Exists -> {stateOfPortion = StateOfPortion.DoesNotExist}
+                            StateOfPortion.IsBeingCreated -> {
+                                stateOfPortion = StateOfPortion.DoesNotExist
+                                enableOutlinedTextField = false
+                            }
+                            StateOfPortion.IsBeingEdited -> {
+                                stateOfPortion = StateOfPortion.Exists
+                                enableOutlinedTextField = false
+                            }
+                            StateOfPortion.Exists -> {
+                                stateOfPortion = StateOfPortion.DoesNotExist
+                                enableOutlinedTextField = false
+                            }
                         }
                     },
 
-                    onClickDismissButton = {displayDialog = false}
+                    onClickDismissButton = {
+                        enableOutlinedTextField = false
+                        displayDialog = false
+                        enableOutlinedTextField = true
+                    }
                 )
             }
         }

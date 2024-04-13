@@ -20,17 +20,36 @@ import com.example.h4j4.ui.theme.UnfocusedTextFieldWhiteElement
 
     var valueToDisplay by remember { mutableStateOf(value.toString()) }
     var focusController by remember { mutableStateOf(focusRequester) }
-    var isError by remember {
+    var suffixColor by remember { mutableStateOf(Color.White) }
+    var isError by remember { mutableStateOf(false) }.apply {
 
-        mutableStateOf(
+        when (valueToDisplay) {
 
-            when(valueToDisplay) {
+            "0" -> {this.value = true}
 
-                "0" -> {true}
+            else -> {this.value = false}
+        }
+    }
 
-                else -> {false}
+    LaunchedEffect(valueToDisplay) {
+
+        when (valueToDisplay) {
+
+            "" -> {
+                isError = true
+                suffixColor = Color.Red
             }
-        )
+
+            "0" -> {
+                isError = true
+                suffixColor = Color.Red
+            }
+
+            else -> {
+                isError = false
+                suffixColor = Color.White
+            }
+        }
     }
 
     if (isVisible) {
@@ -39,7 +58,7 @@ import com.example.h4j4.ui.theme.UnfocusedTextFieldWhiteElement
             value = valueToDisplay,
             onValueChange = {
 
-                Log.d("check if isError", "isError = $isError")
+                Log.d("check what it", it)
 
                 if (it.isEmpty()) {
 
@@ -62,7 +81,7 @@ import com.example.h4j4.ui.theme.UnfocusedTextFieldWhiteElement
             modifier = Modifier
                 .width(90.dp)
                 .focusRequester(focusController),
-            suffix = { Text(suffix) },
+            suffix = { Text(text = suffix, color = suffixColor) },
 
             isError = isError,
             enabled = isEnabled,
@@ -88,11 +107,6 @@ import com.example.h4j4.ui.theme.UnfocusedTextFieldWhiteElement
 
                 cursorColor = Color.White,
                 errorCursorColor = Color.Red,
-
-                focusedSuffixColor = Color.White,
-                unfocusedSuffixColor = Color.White,
-                disabledSuffixColor = Color.White,
-                errorSuffixColor = Color.Red,
             )
         )
     }
