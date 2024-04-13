@@ -9,37 +9,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.h4j4.user.enumClasses.StateOfPortion
-import com.example.h4j4.user.ui.subsequentialComponents.MyAlertDialog
-import com.example.h4j4.user.ui.subsequentialComponents.MyIconButton
-import com.example.h4j4.user.ui.subsequentialComponents.MyOutlinedTextield
+import com.example.h4j4.user.ui.subsequentialComponents.MyFilterChip
 import com.example.h4j4.user.ui.subsequentialComponents.Portion
 import com.example.h4j4.user.viewState.UserViewState
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColumnScope.MainContent(uiState: UserViewState) {
 
-//    var waterIsTracked by remember { mutableStateOf(false) }
-
     var heightOfWaterSurface by remember { mutableStateOf(50) }
-
-//    = when (waterIsTracked) {
-//        true -> {
-//            220.dp
-//        }
-//
-//        false -> {
-//            50.dp
-//        }
-//    }
+    var heightOfCreatineSurface by remember { mutableStateOf(50) }
 
     Column(
 
@@ -60,22 +41,60 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
 
                 is UserViewState.LoadedSuccessfully -> {
 
-//                    Filling data
+//                    Water
                     var waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
 
                     var firstPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.firstPortion) }
                     var secondPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.secondPortion) }
                     var thirdPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.thirdPortion) }
 
-                    LaunchedEffect(waterIsTracked) {
+                    LaunchedEffect(waterIsTracked, secondPortionOfWater) {
 
                         when (waterIsTracked) {
                             true -> {
-                                heightOfWaterSurface = 220
+
+                                if (secondPortionOfWater == 0) {
+
+                                    heightOfWaterSurface = 220
+                                }
+
+                                else {
+
+                                    heightOfWaterSurface = 260
+                                }
                             }
 
                             false -> {
                                 heightOfWaterSurface = 50
+                            }
+                        }
+                    }
+
+//                    Creatine
+                    var creatineIsTracked by remember { mutableStateOf(uiState.whatIsTracked.creatine) }
+
+                    var firstPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.firstPortion) }
+                    var secondPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.secondPortion) }
+                    var thirdPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.thirdPortion) }
+
+                    LaunchedEffect(creatineIsTracked, secondPortionOfCreatine) {
+
+                        when (creatineIsTracked) {
+                            true -> {
+
+                                if (secondPortionOfCreatine == 0) {
+
+                                    heightOfCreatineSurface = 220
+                                }
+
+                                else {
+
+                                    heightOfCreatineSurface = 260
+                                }
+                            }
+
+                            false -> {
+                                heightOfCreatineSurface = 50
                             }
                         }
                     }
@@ -97,26 +116,9 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
 
                         content = {
 
-                            FilterChip(
-
-                                selected = true,
-                                onClick = { waterIsTracked = !waterIsTracked },
-                                label = { Text(text = "Water", color = Color.White) },
-                                colors = FilterChipDefaults.filterChipColors(
-                                    selectedContainerColor = Color.Transparent,
-
-                                ),
-                                trailingIcon = {
-                                    if (waterIsTracked) {
-                                        androidx.compose.material.Icon(
-                                            imageVector = Icons.Rounded.Check,
-                                            tint = Color.White,
-                                            contentDescription = null
-                                        )
-                                    }
-                                }
-                            )
-
+                            MyFilterChip(isTracked = waterIsTracked, text = "Water") {
+                                waterIsTracked = it
+                            }
                             if (waterIsTracked) {
 
                                 Row(
@@ -137,16 +139,16 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                                     }
                                 )
 
-                                Portion(firstPortionOfWater) {newValueOfPortion: Int -> firstPortionOfWater = newValueOfPortion}
+                                Portion(firstPortionOfWater, "ml") {newValueOfPortion: Int -> firstPortionOfWater = newValueOfPortion}
 
                                 if (firstPortionOfWater != 0) {
 
-                                    Portion(secondPortionOfWater) {newValueOfPortion: Int -> secondPortionOfWater = newValueOfPortion}
+                                    Portion(secondPortionOfWater, "ml") {newValueOfPortion: Int -> secondPortionOfWater = newValueOfPortion}
                                 }
 
                                 if (secondPortionOfWater != 0) {
 
-                                    Portion(thirdPortionOfWater) {newValueOfPortion: Int -> thirdPortionOfWater = newValueOfPortion}
+                                    Portion(thirdPortionOfWater, "ml") {newValueOfPortion: Int -> thirdPortionOfWater = newValueOfPortion}
                                 }
                             }
                         }

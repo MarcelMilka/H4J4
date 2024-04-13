@@ -14,13 +14,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.user.enumClasses.StateOfPortion
-// Well, I applied suggested by you changes - and it does not work. Here are two composable functions. Launching of the keyboard happens between them.
 @Composable
-fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
+fun Portion(portionSize: Int, suffix: String, newValueOfPortion: (Int) -> Unit) {
 
 //    Portion
     var portion by remember { mutableStateOf(portionSize) }
@@ -51,8 +48,9 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
 //    Dialog
     var displayDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enableOutlinedTextField) {
-        if (enableOutlinedTextField) {
+    LaunchedEffect(enableOutlinedTextField, displayOutlinedTextField) {
+
+        if (displayOutlinedTextField && displayOutlinedTextField && portion == 0) {
             focusRequester.requestFocus()
         }
     }
@@ -109,13 +107,15 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                 when (stateOfPortion) {
                     StateOfPortion.DoesNotExist -> { // icon add
                         stateOfPortion = StateOfPortion.IsBeingCreated
-                        enableOutlinedTextField = false
-                        focusRequester.freeFocus()
+                        enableOutlinedTextField = true
+                        displayOutlinedTextField = true
+//                        focusRequester.requestFocus()
                     }
                     StateOfPortion.IsBeingCreated -> { // icon check
                         stateOfPortion = StateOfPortion.Exists
                         enableOutlinedTextField = false
                         focusRequester.freeFocus()
+                        newValueOfPortion(portion)
                     }
                     StateOfPortion.Exists -> { // icon edit
                         stateOfPortion = StateOfPortion.IsBeingEdited
@@ -127,13 +127,14 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                         stateOfPortion = StateOfPortion.Exists
                         enableOutlinedTextField = false
                         focusRequester.freeFocus()
+                        newValueOfPortion(portion)
                     }
                 }
             }
 
             if (displayOutlinedTextField) {
 
-                MyOutlinedTextield(value = portion, suffix = "ml", isEnabled = enableOutlinedTextField, isVisible = true, focusRequester = focusRequester) {
+                MyOutlinedTextield(value = portion, suffix = suffix, isEnabled = enableOutlinedTextField, isVisible = true, focusRequester = focusRequester) {
                     portion = it
                 }
 
@@ -165,9 +166,11 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                     text = descriptionOfTheDialog,
 
                     onDismissRequest = {
-                        enableOutlinedTextField = false
                         displayDialog = false
-                        enableOutlinedTextField = true
+
+                        if (enableOutlinedTextField) {
+                            enableOutlinedTextField = true
+                        }
                     },
 
                     onClickConfirmButton = {
@@ -177,6 +180,7 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                             StateOfPortion.DoesNotExist -> {}
                             StateOfPortion.IsBeingCreated -> {
                                 stateOfPortion = StateOfPortion.DoesNotExist
+                                portion = 0
                                 enableOutlinedTextField = false
                             }
                             StateOfPortion.IsBeingEdited -> {
@@ -185,15 +189,19 @@ fun Portion(portionSize: Int, newValueOfPortion: (Int) -> Unit) {
                             }
                             StateOfPortion.Exists -> {
                                 stateOfPortion = StateOfPortion.DoesNotExist
+                                portion = 0
+                                newValueOfPortion(portion)
                                 enableOutlinedTextField = false
                             }
                         }
                     },
 
                     onClickDismissButton = {
-                        enableOutlinedTextField = false
                         displayDialog = false
-                        enableOutlinedTextField = true
+
+                        if (enableOutlinedTextField) {
+                            enableOutlinedTextField = true
+                        }
                     }
                 )
             }
