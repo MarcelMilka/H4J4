@@ -7,6 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.user.CheckIfSomethingHasChanged
 import com.example.h4j4.user.ui.subsequentialComponents.MyFragment
 import com.example.h4j4.user.viewState.UserViewState
 
@@ -34,6 +35,53 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                 }
 
                 is UserViewState.LoadedSuccessfully -> {
+
+                    var changesOccurred by remember { mutableStateOf(false) }
+
+                    val checkIfSomethingHasChanged = CheckIfSomethingHasChanged(
+                        waterIsTracked = uiState.whatIsTracked.water,
+                        creatineIsTracked = uiState.whatIsTracked.creatine,
+
+                        dailyGoalOfIngestionOfWater = uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt(),
+                        dailyGoalOfIngestionOfCreatine = uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt(),
+
+                        firstPortionOfWater = uiState.portionsOfWater.firstPortion,
+                        secondPortionOfWater = uiState.portionsOfWater.secondPortion,
+                        thirdPortionOfWater = uiState.portionsOfWater.thirdPortion,
+
+                        thirdPortionOfCreatine = uiState.portionsOfCreatine.firstPortion,
+                        firstPortionOfCreatine = uiState.portionsOfCreatine.secondPortion,
+                        secondPortionOfCreatine = uiState.portionsOfCreatine.thirdPortion,
+                    )
+
+                    var changes by remember { mutableStateOf(
+                        CheckIfSomethingHasChanged(
+                            waterIsTracked = uiState.whatIsTracked.water,
+                            creatineIsTracked = uiState.whatIsTracked.creatine,
+
+                            dailyGoalOfIngestionOfWater = uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt(),
+                            dailyGoalOfIngestionOfCreatine = uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt(),
+
+                            firstPortionOfWater = uiState.portionsOfWater.firstPortion,
+                            secondPortionOfWater = uiState.portionsOfWater.secondPortion,
+                            thirdPortionOfWater = uiState.portionsOfWater.thirdPortion,
+
+                            thirdPortionOfCreatine = uiState.portionsOfCreatine.firstPortion,
+                            firstPortionOfCreatine = uiState.portionsOfCreatine.secondPortion,
+                            secondPortionOfCreatine = uiState.portionsOfCreatine.thirdPortion,
+                        )
+                    ) }
+
+                    LaunchedEffect(checkIfSomethingHasChanged, changes) {
+
+                        if (checkIfSomethingHasChanged != changes) {
+                            changesOccurred = true
+                        }
+
+                        else {
+                            changesOccurred = false
+                        }
+                    }
 
 //                    Water
                     var waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
@@ -97,34 +145,34 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
 
                     MyFragment(
                         heightOfSurface = heightOfWaterSurface,
-                        isTracked = waterIsTracked,
-                        dailyGoal = dailyAmountOfWaterToIngest,
+                        isTracked = checkIfSomethingHasChanged.waterIsTracked,
+                        dailyGoal = checkIfSomethingHasChanged.dailyGoalOfIngestionOfWater,
                         suffix = "ml",
                         waterOrCreatine = "Water",
-                        firstPortion = firstPortionOfWater,
-                        secondPortion = secondPortionOfWater,
-                        thirdPortion = thirdPortionOfWater,
-                        onIsTrackedChanged = { waterIsTracked = it },
-                        onFirstPortionChanged = {firstPortionOfWater = it},
-                        onSecondPortionChanged = {secondPortionOfWater = it},
-                        onThirdPortionChanged = { thirdPortionOfWater = it }
+                        firstPortion = checkIfSomethingHasChanged.firstPortionOfWater,
+                        secondPortion = checkIfSomethingHasChanged.secondPortionOfWater,
+                        thirdPortion = checkIfSomethingHasChanged.thirdPortionOfWater,
+                        onIsTrackedChanged = { changes.waterIsTracked = it },
+                        onFirstPortionChanged = {changes.firstPortionOfWater = it},
+                        onSecondPortionChanged = {changes.secondPortionOfWater = it},
+                        onThirdPortionChanged = { changes.thirdPortionOfWater = it }
                     )
 
                     Spacer(Modifier.height(50.dp))
 
                     MyFragment(
                         heightOfSurface = heightOfCreatineSurface,
-                        isTracked = creatineIsTracked,
-                        dailyGoal = dailyAmountOfCreatineToIngest,
+                        isTracked = checkIfSomethingHasChanged.creatineIsTracked,
+                        dailyGoal = checkIfSomethingHasChanged.dailyGoalOfIngestionOfCreatine,
                         suffix = "g",
                         waterOrCreatine = "Creatine",
-                        firstPortion = firstPortionOfCreatine,
-                        secondPortion = secondPortionOfCreatine,
-                        thirdPortion = thirdPortionOfCreatine,
-                        onIsTrackedChanged = { creatineIsTracked = it },
-                        onFirstPortionChanged = {firstPortionOfCreatine = it},
-                        onSecondPortionChanged = {secondPortionOfCreatine = it},
-                        onThirdPortionChanged = { thirdPortionOfCreatine = it }
+                        firstPortion = checkIfSomethingHasChanged.firstPortionOfCreatine,
+                        secondPortion = checkIfSomethingHasChanged.secondPortionOfCreatine,
+                        thirdPortion = checkIfSomethingHasChanged.thirdPortionOfCreatine,
+                        onIsTrackedChanged = { changes.creatineIsTracked = it },
+                        onFirstPortionChanged = {changes.firstPortionOfCreatine = it},
+                        onSecondPortionChanged = {changes.secondPortionOfCreatine = it},
+                        onThirdPortionChanged = { changes.thirdPortionOfCreatine = it }
                     )
                 }
             }
