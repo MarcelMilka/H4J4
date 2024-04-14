@@ -1,5 +1,6 @@
 package com.example.h4j4.user.ui.subsequentialComponents
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,13 +49,20 @@ fun Portion(portionSize: Int, suffix: String, newValueOfPortion: (Int) -> Unit) 
 //    Dialog
     var displayDialog by remember { mutableStateOf(false) }
 
-    LaunchedEffect(enableOutlinedTextField, displayOutlinedTextField) {
+    LaunchedEffect(enableOutlinedTextField, displayOutlinedTextField, portion) {
 
-        if (displayOutlinedTextField && displayOutlinedTextField && portion == 0) {
+//        Launching keyboard when the user clicks "add" icon
+        if (enableOutlinedTextField && displayOutlinedTextField && portion == 0) {
+            focusRequester.requestFocus()
+        }
+
+//        Launching keyboard when the user clicks "edit" icon
+        if (stateOfPortion == StateOfPortion.IsBeingEdited) {
             focusRequester.requestFocus()
         }
     }
 
+//    Changing appearance and states of the IconButtons and the OutlinedTextField
     LaunchedEffect(stateOfPortion, portion) {
 
         if (portion == 0 || stateOfPortion != StateOfPortion.DoesNotExist) {
@@ -109,7 +117,6 @@ fun Portion(portionSize: Int, suffix: String, newValueOfPortion: (Int) -> Unit) 
                         stateOfPortion = StateOfPortion.IsBeingCreated
                         enableOutlinedTextField = true
                         displayOutlinedTextField = true
-//                        focusRequester.requestFocus()
                     }
                     StateOfPortion.IsBeingCreated -> { // icon check
                         stateOfPortion = StateOfPortion.Exists

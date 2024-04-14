@@ -1,12 +1,18 @@
 package com.example.h4j4.user.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.homeScreen.view.HomeScreen
 import com.example.h4j4.user.UserViewModel
 import com.example.h4j4.user.ui.mainComponents.BottomBar
 import com.example.h4j4.user.ui.mainComponents.MainContent
@@ -22,7 +28,7 @@ class User : ComponentActivity() {
 
             setContent {
 
-//                Water
+                var buttonToSaveChangesIsEnabled by remember { mutableStateOf(false) }
 
                 Column(
                     modifier = Modifier
@@ -38,10 +44,16 @@ class User : ComponentActivity() {
 
                         MainContent(userViewState)
 
-                        BottomBar()
+                        BottomBar(
+                            onclickReturnButton = {startActivity(Intent(this@User, HomeScreen::class.java))},
+                            onclickSaveButton = {},
+                            isEnabled = buttonToSaveChangesIsEnabled
+                        )
                     }
                 )
             }
         }
     }
 }
+
+//buttons in the BottomBar.kt work properly, fixed the bug which did not launch keyboard after clicking button responsible for editing value.
