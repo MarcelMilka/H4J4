@@ -17,12 +17,14 @@ import androidx.compose.ui.unit.dp
 @Composable fun MyFragment(
     heightOfSurface: Int,
     isTracked: Boolean,
+    subsequentSubstanceIsTracked: Boolean,
     dailyGoal: Int,
     suffix: String,
     waterOrCreatine: String,
     firstPortion: Int,
     secondPortion: Int,
     thirdPortion: Int,
+    displayModalBottomSheet: () -> Unit,
     onIsTrackedChanged: (Boolean) -> Unit,
     onFirstPortionChanged: (Int) -> Unit,
     onSecondPortionChanged: (Int) -> Unit,
@@ -41,7 +43,7 @@ import androidx.compose.ui.unit.dp
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top,
         content = {
-            MyFilterChip(isTracked = isTracked, text = waterOrCreatine) {
+            MyFilterChip(isTracked = isTracked, subsequentSubstanceIsTracked = subsequentSubstanceIsTracked ,text = waterOrCreatine) {
                 onIsTrackedChanged(it)
             }
             if (isTracked) {
@@ -55,7 +57,7 @@ import androidx.compose.ui.unit.dp
                             color = Color.White
                         )
                         TextButton(
-                            onClick = {},
+                            onClick = {displayModalBottomSheet()},
                             content = {
                                 Text(
                                     text = "$dailyGoal $suffix",

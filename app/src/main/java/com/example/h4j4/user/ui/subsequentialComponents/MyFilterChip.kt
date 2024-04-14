@@ -10,11 +10,25 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Composable fun MyFilterChip(isTracked: Boolean, text: String, changeTracking: (Boolean) -> Unit) {
+@Composable fun MyFilterChip(isTracked: Boolean, text: String, subsequentSubstanceIsTracked: Boolean, changeTracking: (Boolean) -> Unit) {
+
+    var isEnabled by remember { mutableStateOf(false) }
+
+    LaunchedEffect(subsequentSubstanceIsTracked) {
+
+        if (subsequentSubstanceIsTracked) {
+            isEnabled = true
+        }
+
+        else {
+            isEnabled = false
+        }
+    }
 
     FilterChip(
 
         selected = true,
+        enabled = isEnabled,
         onClick = { changeTracking(!isTracked) },
         label = { Text(text = text, color = Color.White) },
         colors = FilterChipDefaults.filterChipColors(

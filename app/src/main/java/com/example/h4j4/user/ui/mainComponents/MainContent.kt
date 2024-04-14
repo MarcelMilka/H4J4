@@ -1,15 +1,19 @@
 package com.example.h4j4.user.ui.mainComponents
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.BottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.user.ui.subsequentialComponents.MyFragment
+import com.example.h4j4.user.userModalBottomSheet.ui.UserModalBottomSheet
 import com.example.h4j4.user.viewState.UserViewState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ColumnScope.MainContent(uiState: UserViewState) {
 
@@ -95,15 +99,28 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                         }
                     }
 
+//                    ModalBottomSheet
+                    var displayModalBottomSheet by remember { mutableStateOf(false) }
+                    var modalBottomSheetRepresents: WaterOrCreatine? by remember { mutableStateOf(null) }
+                    var currentDailyGoal by remember { mutableStateOf(0) }
+                    val sheetState = rememberModalBottomSheetState()
+
+
                     MyFragment(
                         heightOfSurface = heightOfWaterSurface,
                         isTracked = waterIsTracked,
+                        subsequentSubstanceIsTracked = creatineIsTracked,
                         dailyGoal = dailyAmountOfWaterToIngest,
                         suffix = "ml",
                         waterOrCreatine = "Water",
                         firstPortion = firstPortionOfWater,
                         secondPortion = secondPortionOfWater,
                         thirdPortion = thirdPortionOfWater,
+                        displayModalBottomSheet = {
+                            displayModalBottomSheet = true
+                            modalBottomSheetRepresents = WaterOrCreatine.WATER
+                            currentDailyGoal = dailyAmountOfWaterToIngest
+                        },
                         onIsTrackedChanged = { waterIsTracked = it },
                         onFirstPortionChanged = {firstPortionOfWater = it},
                         onSecondPortionChanged = {secondPortionOfWater = it},
@@ -115,17 +132,38 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                     MyFragment(
                         heightOfSurface = heightOfCreatineSurface,
                         isTracked = creatineIsTracked,
+                        subsequentSubstanceIsTracked = waterIsTracked,
                         dailyGoal = dailyAmountOfCreatineToIngest,
                         suffix = "g",
                         waterOrCreatine = "Creatine",
                         firstPortion = firstPortionOfCreatine,
                         secondPortion = secondPortionOfCreatine,
                         thirdPortion = thirdPortionOfCreatine,
+                        displayModalBottomSheet = {
+                            displayModalBottomSheet = true
+                            modalBottomSheetRepresents = WaterOrCreatine.CREATINE
+                            currentDailyGoal = dailyAmountOfCreatineToIngest
+                        },
                         onIsTrackedChanged = { creatineIsTracked = it },
                         onFirstPortionChanged = {firstPortionOfCreatine = it},
                         onSecondPortionChanged = {secondPortionOfCreatine = it},
                         onThirdPortionChanged = { thirdPortionOfCreatine = it }
                     )
+
+                    UserModalBottomSheet(
+                        displayModalBottomSheet = displayModalBottomSheet,
+                        modalBottomSheetRepresents = modalBottomSheetRepresents,
+                        currentDailyGoal = currentDailyGoal,
+                        sheetState = sheetState,
+                    ) {
+                        when (modalBottomSheetRepresents) {
+                            WaterOrCreatine.WATER -> { dailyAmountOfWaterToIngest = it }
+                            WaterOrCreatine.CREATINE -> { dailyAmountOfCreatineToIngest = it }
+                            null -> {}
+                        }
+                        displayModalBottomSheet = false
+                        modalBottomSheetRepresents = null
+                    }
                 }
             }
         }
