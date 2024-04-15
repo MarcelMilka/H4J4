@@ -42,7 +42,7 @@ class User : ComponentActivity() {
 
                         TopBar(userViewState)
 
-                        MainContent(userViewState)
+                        MainContent(userViewState) {buttonToSaveChangesIsEnabled = it}
 
                         BottomBar(
                             onclickReturnButton = {startActivity(Intent(this@User, HomeScreen::class.java))},

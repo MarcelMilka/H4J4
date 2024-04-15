@@ -38,7 +38,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
             TextButton(
 
                 onClick = { onclickSaveButton() },
-                enabled = false,
+                enabled = isEnabled,
                 content = { Text(text = "Save changes", color = White) }
             )
         }

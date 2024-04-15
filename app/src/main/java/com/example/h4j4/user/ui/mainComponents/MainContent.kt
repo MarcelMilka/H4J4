@@ -15,7 +15,10 @@ import com.example.h4j4.user.viewState.UserViewState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ColumnScope.MainContent(uiState: UserViewState) {
+fun ColumnScope.MainContent(
+    uiState: UserViewState,
+    onTextButtonSaveChanges: (Boolean) -> Unit
+) {
 
     var heightOfWaterSurface by remember { mutableStateOf(50) }
     var heightOfCreatineSurface by remember { mutableStateOf(50) }
@@ -40,13 +43,24 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                 is UserViewState.LoadedSuccessfully -> {
 
 //                    Water
-                    var waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
-                    var dailyAmountOfWaterToIngest by remember { mutableStateOf(uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt()) }
 
-                    var firstPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.firstPortion) }
-                    var secondPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.secondPortion) }
-                    var thirdPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.thirdPortion) }
+//                        Default values
+                          var _waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
+                          var _dailyAmountOfWaterToIngest by remember { mutableStateOf(uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt()) }
 
+                          var _firstPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.firstPortion) }
+                          var _secondPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.secondPortion) }
+                          var _thirdPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.thirdPortion) }
+
+//                        Editable values
+                          var waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
+                          var dailyAmountOfWaterToIngest by remember { mutableStateOf(uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt()) }
+
+                          var firstPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.firstPortion) }
+                          var secondPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.secondPortion) }
+                          var thirdPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.thirdPortion) }
+
+//                  Adjust height of the water fragment
                     LaunchedEffect(waterIsTracked, secondPortionOfWater) {
 
                         when (waterIsTracked) {
@@ -70,13 +84,25 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                     }
 
 //                    Creatine
-                    var creatineIsTracked by remember { mutableStateOf(uiState.whatIsTracked.creatine) }
-                    var dailyAmountOfCreatineToIngest by remember { mutableStateOf(uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt()) }
 
-                    var firstPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.firstPortion) }
-                    var secondPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.secondPortion) }
-                    var thirdPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.thirdPortion) }
+//                        Default values
+                          var _creatineIsTracked by remember { mutableStateOf(uiState.whatIsTracked.creatine) }
+                          var _dailyAmountOfCreatineToIngest by remember { mutableStateOf(uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt()) }
 
+                          var _firstPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.firstPortion) }
+                          var _secondPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.secondPortion) }
+                          var _thirdPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.thirdPortion) }
+
+
+//                        Editable values
+                          var creatineIsTracked by remember { mutableStateOf(uiState.whatIsTracked.creatine) }
+                          var dailyAmountOfCreatineToIngest by remember { mutableStateOf(uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt()) }
+
+                          var firstPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.firstPortion) }
+                          var secondPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.secondPortion) }
+                          var thirdPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.thirdPortion) }
+
+//                  Adjust height of the creatine fragment
                     LaunchedEffect(creatineIsTracked, secondPortionOfCreatine) {
 
                         when (creatineIsTracked) {
@@ -99,12 +125,42 @@ fun ColumnScope.MainContent(uiState: UserViewState) {
                         }
                     }
 
-//                    ModalBottomSheet
+//                  ModalBottomSheet
                     var displayModalBottomSheet by remember { mutableStateOf(false) }
                     var modalBottomSheetRepresents: WaterOrCreatine? by remember { mutableStateOf(null) }
                     var currentDailyGoal by remember { mutableStateOf(0) }
                     val sheetState = rememberModalBottomSheetState()
 
+                    LaunchedEffect(
+                        _waterIsTracked, waterIsTracked,
+                        _creatineIsTracked, creatineIsTracked,
+
+                        _dailyAmountOfWaterToIngest, dailyAmountOfWaterToIngest,
+                        _dailyAmountOfCreatineToIngest, dailyAmountOfCreatineToIngest,
+
+                        _firstPortionOfWater, firstPortionOfWater,
+                        _firstPortionOfCreatine, firstPortionOfCreatine,
+
+                        _secondPortionOfWater, secondPortionOfWater,
+                        _secondPortionOfCreatine, secondPortionOfCreatine,
+
+                        _thirdPortionOfWater, thirdPortionOfWater,
+                        _thirdPortionOfCreatine, thirdPortionOfCreatine
+
+                    ) {
+
+                        if (_waterIsTracked != waterIsTracked || _creatineIsTracked != creatineIsTracked) { onTextButtonSaveChanges(true) }
+
+                        else if (_dailyAmountOfWaterToIngest != dailyAmountOfWaterToIngest || _dailyAmountOfCreatineToIngest != dailyAmountOfCreatineToIngest) { onTextButtonSaveChanges(true) }
+
+                        else if (_firstPortionOfWater != firstPortionOfWater ||  _firstPortionOfCreatine != firstPortionOfCreatine) { onTextButtonSaveChanges(true) }
+
+                        else if (_secondPortionOfWater != secondPortionOfWater || _secondPortionOfCreatine != secondPortionOfCreatine) { onTextButtonSaveChanges(true) }
+
+                        else if (_thirdPortionOfWater != thirdPortionOfWater || _thirdPortionOfCreatine != thirdPortionOfCreatine) { onTextButtonSaveChanges(true) }
+
+                        else { onTextButtonSaveChanges(false) }
+                    }
 
                     MyFragment(
                         heightOfSurface = heightOfWaterSurface,
