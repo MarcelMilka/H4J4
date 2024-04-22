@@ -1,8 +1,10 @@
 package com.example.h4j4.user.repository
 
+import android.util.Log
 import com.example.h4j4.homeScreen.viewState.PortionsOfCreatine
 import com.example.h4j4.homeScreen.viewState.PortionsOfWater
 import com.example.h4j4.homeScreen.viewState.WhatIsTracked
+import com.example.h4j4.user.dataClasses.UserSettingsChange
 import com.example.h4j4.user.viewState.DailyAmountOfCreatineToIngest
 import com.example.h4j4.user.viewState.DailyAmountOfWaterToIngest
 import com.example.h4j4.user.viewState.UserUnit
@@ -108,6 +110,16 @@ class UserRepository: UserRepositoryInterface {
 
                     continuation.resume(UserUnit(whatIsTracked, dailyAmountOfWaterToIngest, portionsOfWater, dailyAmountOfCreatineToIngest, portionsOfCreatine))
                 }
+        }
+    }
+
+    override suspend fun updateValues(changes: MutableList<UserSettingsChange>) {
+
+        changes.forEach { userSettingsChange ->
+
+            me.document(userSettingsChange.nameOfSubcollection).update(userSettingsChange.nameOfField, userSettingsChange.newValue.toString())
+                .addOnSuccessListener { Log.d("saving changes", "saved successfully") }
+                .addOnFailureListener { Log.d("saving changes", "$it") }
         }
     }
 }

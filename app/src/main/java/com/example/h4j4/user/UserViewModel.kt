@@ -3,8 +3,11 @@ package com.example.h4j4.user
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.h4j4.user.dataClasses.UserSettingsChange
 import com.example.h4j4.user.repository.UserRepository
 import com.example.h4j4.user.viewState.UserViewState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
@@ -37,6 +40,13 @@ class UserViewModel: ViewModel() {
                 dailyAmountOfCreatineToIngest = userUnit.dailyAmountOfCreatineToIngest,
                 portionsOfCreatine = userUnit.portionsOfCreatine
             ))
+        }
+    }
+
+    fun updateValues(changes: MutableList<UserSettingsChange>) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.updateValues(changes = changes)
         }
     }
 }

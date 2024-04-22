@@ -54,7 +54,7 @@ class User : ComponentActivity() {
                             }
                         )
 
-                        BottomBar(changes = changes)
+                        BottomBar(onClick = {viewModel.updateValues(changes)})
                     }
                 )
             }
