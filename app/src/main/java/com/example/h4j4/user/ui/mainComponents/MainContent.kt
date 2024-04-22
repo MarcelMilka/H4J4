@@ -1,14 +1,14 @@
 package com.example.h4j4.user.ui.mainComponents
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.BottomSheetState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
+import com.example.h4j4.user.dataClasses.UserSettingsChange
 import com.example.h4j4.user.ui.subsequentialComponents.MyFragment
 import com.example.h4j4.user.userModalBottomSheet.ui.UserModalBottomSheet
 import com.example.h4j4.user.viewState.UserViewState
@@ -17,9 +17,10 @@ import com.example.h4j4.user.viewState.UserViewState
 @Composable
 fun ColumnScope.MainContent(
     uiState: UserViewState,
-    onTextButtonSaveChanges: (Boolean) -> Unit
+    passChanges: (MutableList<UserSettingsChange>) -> Unit
 ) {
 
+//  adjust height of the components to amount of existing portions
     var heightOfWaterSurface by remember { mutableStateOf(50) }
     var heightOfCreatineSurface by remember { mutableStateOf(50) }
 
@@ -47,7 +48,6 @@ fun ColumnScope.MainContent(
 //                        Default values
                           var _waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
                           var _dailyAmountOfWaterToIngest by remember { mutableStateOf(uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt()) }
-
                           var _firstPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.firstPortion) }
                           var _secondPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.secondPortion) }
                           var _thirdPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.thirdPortion) }
@@ -55,40 +55,24 @@ fun ColumnScope.MainContent(
 //                        Editable values
                           var waterIsTracked by remember { mutableStateOf(uiState.whatIsTracked.water) }
                           var dailyAmountOfWaterToIngest by remember { mutableStateOf(uiState.dailyAmountOfWaterToIngest.dailyAmountOfWaterToIngest.toInt()) }
-
                           var firstPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.firstPortion) }
                           var secondPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.secondPortion) }
                           var thirdPortionOfWater by remember { mutableStateOf(uiState.portionsOfWater.thirdPortion) }
 
-//                  Adjust height of the water fragment
-                    LaunchedEffect(waterIsTracked, secondPortionOfWater) {
+//                        Adjust height of the water fragment
+                          LaunchedEffect(waterIsTracked, secondPortionOfWater) {
 
-                        when (waterIsTracked) {
-                            true -> {
-
-                                if (secondPortionOfWater == 0) {
-
-                                    heightOfWaterSurface = 220
-                                }
-
-                                else {
-
-                                    heightOfWaterSurface = 260
-                                }
-                            }
-
-                            false -> {
-                                heightOfWaterSurface = 50
-                            }
-                        }
-                    }
+                              when (waterIsTracked) {
+                                  true -> { heightOfWaterSurface = if (secondPortionOfWater == 0) { 220 } else { 260 } }
+                                  false -> { heightOfWaterSurface = 50 }
+                              }
+                          }
 
 //                    Creatine
 
 //                        Default values
                           var _creatineIsTracked by remember { mutableStateOf(uiState.whatIsTracked.creatine) }
                           var _dailyAmountOfCreatineToIngest by remember { mutableStateOf(uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt()) }
-
                           var _firstPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.firstPortion) }
                           var _secondPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.secondPortion) }
                           var _thirdPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.thirdPortion) }
@@ -97,33 +81,17 @@ fun ColumnScope.MainContent(
 //                        Editable values
                           var creatineIsTracked by remember { mutableStateOf(uiState.whatIsTracked.creatine) }
                           var dailyAmountOfCreatineToIngest by remember { mutableStateOf(uiState.dailyAmountOfCreatineToIngest.dailyAmountOfCreatineToIngest.toInt()) }
-
                           var firstPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.firstPortion) }
                           var secondPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.secondPortion) }
                           var thirdPortionOfCreatine by remember { mutableStateOf(uiState.portionsOfCreatine.thirdPortion) }
 
-//                  Adjust height of the creatine fragment
-                    LaunchedEffect(creatineIsTracked, secondPortionOfCreatine) {
-
-                        when (creatineIsTracked) {
-                            true -> {
-
-                                if (secondPortionOfCreatine == 0) {
-
-                                    heightOfCreatineSurface = 220
-                                }
-
-                                else {
-
-                                    heightOfCreatineSurface = 260
-                                }
-                            }
-
-                            false -> {
-                                heightOfCreatineSurface = 50
-                            }
-                        }
-                    }
+//                        Adjust height of the creatine fragment
+                          LaunchedEffect(creatineIsTracked, secondPortionOfCreatine) {
+                              when (creatineIsTracked) {
+                                  true -> { if (secondPortionOfCreatine == 0) { heightOfCreatineSurface = 220 } else { heightOfCreatineSurface = 260 } }
+                                  false -> { heightOfCreatineSurface = 50 }
+                              }
+                          }
 
 //                  ModalBottomSheet
                     var displayModalBottomSheet by remember { mutableStateOf(false) }
@@ -131,35 +99,58 @@ fun ColumnScope.MainContent(
                     var currentDailyGoal by remember { mutableStateOf(0) }
                     val sheetState = rememberModalBottomSheetState()
 
-                    LaunchedEffect(
-                        _waterIsTracked, waterIsTracked,
-                        _creatineIsTracked, creatineIsTracked,
+//                  Enable button responsible for saving, send mutableList of applied changes to the button.
 
-                        _dailyAmountOfWaterToIngest, dailyAmountOfWaterToIngest,
-                        _dailyAmountOfCreatineToIngest, dailyAmountOfCreatineToIngest,
+                    var listOfChanges by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
 
-                        _firstPortionOfWater, firstPortionOfWater,
-                        _firstPortionOfCreatine, firstPortionOfCreatine,
+                    var compareValues = mutableListOf(
+                        ValuesToCompare(defaultValue = _firstPortionOfWater, editableValue = firstPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "first portion"),
+                        ValuesToCompare(defaultValue = _secondPortionOfWater, editableValue = secondPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "second portion"),
+                        ValuesToCompare(defaultValue = _thirdPortionOfWater, editableValue = thirdPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "third portion"),
 
-                        _secondPortionOfWater, secondPortionOfWater,
-                        _secondPortionOfCreatine, secondPortionOfCreatine,
+                        ValuesToCompare(defaultValue = _firstPortionOfCreatine, editableValue = firstPortionOfCreatine, nameOfSubcollection = "Portions of creatine", nameOfField = "first portion"),
+                        ValuesToCompare(defaultValue = _secondPortionOfCreatine, editableValue = secondPortionOfCreatine, nameOfSubcollection = "Portions of creatine", nameOfField = "second portion"),
+                        ValuesToCompare(defaultValue = _thirdPortionOfCreatine, editableValue = thirdPortionOfCreatine, nameOfSubcollection = "Portions of creatine", nameOfField = "third portion")
+                    )
 
-                        _thirdPortionOfWater, thirdPortionOfWater,
-                        _thirdPortionOfCreatine, thirdPortionOfCreatine
+                    LaunchedEffect(compareValues) {
 
-                    ) {
+                        val changesToRemove = mutableListOf<UserSettingsChange>()
+                        val changesToAdd = mutableListOf<UserSettingsChange>()
 
-                        if (_waterIsTracked != waterIsTracked || _creatineIsTracked != creatineIsTracked) { onTextButtonSaveChanges(true) }
+                        compareValues.forEach {
 
-                        else if (_dailyAmountOfWaterToIngest != dailyAmountOfWaterToIngest || _dailyAmountOfCreatineToIngest != dailyAmountOfCreatineToIngest) { onTextButtonSaveChanges(true) }
+                            if (it.defaultValue != it.editableValue) {
+                                val change = UserSettingsChange(nameOfSubcollection = it.nameOfSubcollection, nameOfField = it.nameOfField, newValue = it.editableValue)
 
-                        else if (_firstPortionOfWater != firstPortionOfWater ||  _firstPortionOfCreatine != firstPortionOfCreatine) { onTextButtonSaveChanges(true) }
+                                if (listOfChanges.isEmpty()) {listOfChanges.add(change)}
 
-                        else if (_secondPortionOfWater != secondPortionOfWater || _secondPortionOfCreatine != secondPortionOfCreatine) { onTextButtonSaveChanges(true) }
+                                else {
 
-                        else if (_thirdPortionOfWater != thirdPortionOfWater || _thirdPortionOfCreatine != thirdPortionOfCreatine) { onTextButtonSaveChanges(true) }
+                                    for (existingChange in listOfChanges) {
 
-                        else { onTextButtonSaveChanges(false) }
+//                                      check if the current subcollection and field already exist
+                                        if (change.nameOfSubcollection == existingChange.nameOfSubcollection && change.nameOfField == existingChange.nameOfField) {
+
+                                            changesToRemove.add(existingChange)
+                                            changesToAdd.add(change)
+                                        }
+
+                                        else { changesToAdd.add(change) }
+                                    }
+                                }
+                            }
+                        }
+
+                        listOfChanges.removeAll(changesToRemove)
+
+                        changesToAdd.forEach {
+                            if (!listOfChanges.contains(it)) {
+                                listOfChanges.add(it)
+                            }
+                        }
+
+                        passChanges(listOfChanges)
                     }
 
                     MyFragment(
@@ -183,8 +174,6 @@ fun ColumnScope.MainContent(
                         onThirdPortionChanged = { thirdPortionOfWater = it }
                     )
 
-                    Spacer(Modifier.height(50.dp))
-
                     MyFragment(
                         heightOfSurface = heightOfCreatineSurface,
                         isTracked = creatineIsTracked,
@@ -206,6 +195,7 @@ fun ColumnScope.MainContent(
                         onThirdPortionChanged = { thirdPortionOfCreatine = it }
                     )
 
+//                    Bottom sheet to change daily amount of water/creatine
                     UserModalBottomSheet(
                         displayModalBottomSheet = displayModalBottomSheet,
                         modalBottomSheetRepresents = modalBottomSheetRepresents,
@@ -225,3 +215,4 @@ fun ColumnScope.MainContent(
         }
     )
 }
+data class ValuesToCompare (val defaultValue: Int = 0, val editableValue: Int = 0, val nameOfSubcollection: String, val nameOfField: String)

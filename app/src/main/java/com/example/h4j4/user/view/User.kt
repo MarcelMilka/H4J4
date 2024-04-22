@@ -2,9 +2,11 @@ package com.example.h4j4.user.view
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.h4j4.homeScreen.view.HomeScreen
 import com.example.h4j4.user.UserViewModel
+import com.example.h4j4.user.dataClasses.UserSettingsChange
 import com.example.h4j4.user.ui.mainComponents.BottomBar
 import com.example.h4j4.user.ui.mainComponents.MainContent
 import com.example.h4j4.user.ui.mainComponents.TopBar
@@ -28,7 +31,7 @@ class User : ComponentActivity() {
 
             setContent {
 
-                var buttonToSaveChangesIsEnabled by remember { mutableStateOf(false) }
+                var changes by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
 
                 Column(
                     modifier = Modifier
@@ -42,13 +45,16 @@ class User : ComponentActivity() {
 
                         TopBar(userViewState)
 
-                        MainContent(userViewState) {buttonToSaveChangesIsEnabled = it}
-
-                        BottomBar(
-                            onclickReturnButton = {startActivity(Intent(this@User, HomeScreen::class.java))},
-                            onclickSaveButton = {},
-                            isEnabled = buttonToSaveChangesIsEnabled
+                        MainContent(
+                            uiState = userViewState,
+                            passChanges = {
+                                changes.removeAll(changes)
+                                changes.addAll(it)
+                                Log.d("ow boy", "$changes")
+                            }
                         )
+
+                        BottomBar(changes = changes)
                     }
                 )
             }

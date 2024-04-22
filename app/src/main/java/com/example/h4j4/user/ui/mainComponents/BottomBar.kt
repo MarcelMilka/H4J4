@@ -1,21 +1,19 @@
 package com.example.h4j4.user.ui.mainComponents
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import com.example.h4j4.user.dataClasses.UserSettingsChange
 
-@Composable fun ColumnScope.BottomBar(
-    onclickReturnButton: () -> Unit,
-    onclickSaveButton: () -> Unit,
-    isEnabled: Boolean
-) {
+@Composable fun ColumnScope.BottomBar(changes:  MutableList<UserSettingsChange>) {
 
     Row(
 
@@ -23,22 +21,17 @@ import androidx.compose.ui.graphics.Color.Companion.White
             .fillMaxWidth()
             .weight(2f, true),
 
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically,
 
         content = {
 
-
             TextButton(
 
-                onClick = { onclickReturnButton() },
-                content = { Text(text = "Return to home screen", color = White) }
-            )
-
-            TextButton(
-
-                onClick = { onclickSaveButton() },
-                enabled = isEnabled,
+                onClick = {
+                    // TODO: function responsible for saving changes
+                },
+                enabled = true,
                 content = { Text(text = "Save changes", color = White) }
             )
         }
