@@ -1,20 +1,14 @@
 package com.example.h4j4.user.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.h4j4.homeScreen.view.HomeScreen
 import com.example.h4j4.user.UserViewModel
 import com.example.h4j4.user.dataClasses.UserSettingsChange
 import com.example.h4j4.user.ui.mainComponents.BottomBar
@@ -32,6 +26,7 @@ class User : ComponentActivity() {
             setContent {
 
                 var changes by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
+                var enableSaving by remember { mutableStateOf(false) }
 
                 Column(
                     modifier = Modifier
@@ -50,11 +45,23 @@ class User : ComponentActivity() {
                             passChanges = {
                                 changes.removeAll(changes)
                                 changes.addAll(it)
-                                Log.d("ow boy", "$changes")
+
+                                enableSaving = when (changes.count()) {
+
+                                    0 -> { false }
+
+                                    else -> { true }
+                                }
                             }
                         )
 
-                        BottomBar(onClick = {viewModel.updateValues(changes)})
+                        BottomBar(
+                            isEnabled = enableSaving,
+                            onClick = {
+                                viewModel.updateValues(changes)
+                                enableSaving = false
+                            }
+                        )
                     }
                 )
             }

@@ -13,7 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import com.example.h4j4.user.dataClasses.UserSettingsChange
 
-@Composable fun ColumnScope.BottomBar(onClick: () -> Unit) {
+@Composable fun ColumnScope.BottomBar(
+    isEnabled: Boolean,
+    onClick: () -> Unit
+) {
 
     Row(
 
@@ -29,7 +32,7 @@ import com.example.h4j4.user.dataClasses.UserSettingsChange
             TextButton(
 
                 onClick = {onClick()},
-                enabled = true,
+                enabled = isEnabled,
                 content = { Text(text = "Save changes", color = White) }
             )
         }
