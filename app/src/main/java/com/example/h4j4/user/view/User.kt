@@ -1,20 +1,15 @@
 package com.example.h4j4.user.view
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Button
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.h4j4.homeScreen.view.HomeScreen
 import com.example.h4j4.user.UserViewModel
 import com.example.h4j4.user.dataClasses.UserSettingsChange
 import com.example.h4j4.user.ui.mainComponents.BottomBar
@@ -31,7 +26,7 @@ class User : ComponentActivity() {
 
             setContent {
 
-                var changes by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
+                var listOfChanges by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
 
                 Column(
                     modifier = Modifier
@@ -47,19 +42,40 @@ class User : ComponentActivity() {
 
                         MainContent(
                             uiState = userViewState,
+                            listOfChanges = listOfChanges,
                             passChanges = {
-                                changes.removeAll(changes)
-                                changes.addAll(it)
-                                Log.d("ow boy", "$changes")
+
+//                                listOfChanges.removeAll(listOfChanges)
+                                if (listOfChanges.isEmpty()) {
+                                    listOfChanges.addAll(it)
+                                }
+
+                                else {
+                                    listOfChanges.clear()
+                                    listOfChanges.addAll(it)
+
+                                }
+
+                                Log.d("hey there delilah", "User.kt, MainContent(passChanges) $it")
+
                             }
                         )
 
-                        BottomBar(onClick = {viewModel.updateValues(changes)})
+                        Button(
+                            onClick = { Log.d("hey there delilah", "User.kt, Button $listOfChanges") },
+                            content = {}
+                        )
+
+                        BottomBar(
+                            onClick = {
+                                Log.d("hey there delilah", "User.kt, BottomBar $listOfChanges")
+                                viewModel.updateValues(listOfChanges)
+                                listOfChanges.clear()
+                            }
+                        )
                     }
                 )
             }
         }
     }
 }
-
-//buttons in the BottomBar.kt work properly, fixed the bug which did not launch keyboard after clicking button responsible for editing value.
