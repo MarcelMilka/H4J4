@@ -17,7 +17,6 @@ import com.example.h4j4.user.viewState.UserViewState
 @Composable
 fun ColumnScope.MainContent(
     uiState: UserViewState,
-    listOfChanges: MutableList<UserSettingsChange>,
     passChanges: (MutableList<UserSettingsChange>) -> Unit
 ) {
 
@@ -102,6 +101,8 @@ fun ColumnScope.MainContent(
 
 //                  Enable button responsible for saving, send mutableList of applied changes to the button.
 
+                    var listOfChanges by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
+
                     var compareValues = mutableListOf(
                         ValuesToCompare(defaultValue = _firstPortionOfWater, editableValue = firstPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "first portion"),
                         ValuesToCompare(defaultValue = _secondPortionOfWater, editableValue = secondPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "second portion"),
@@ -149,9 +150,7 @@ fun ColumnScope.MainContent(
                             }
                         }
 
-                        Log.d("hey there delilah", "MainContent.kt $listOfChanges")
                         passChanges(listOfChanges)
-                        listOfChanges.clear()
                     }
 
                     MyFragment(
