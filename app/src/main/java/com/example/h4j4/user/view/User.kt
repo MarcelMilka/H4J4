@@ -48,7 +48,6 @@ class User : ComponentActivity() {
                     }
                 }
 
-
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
