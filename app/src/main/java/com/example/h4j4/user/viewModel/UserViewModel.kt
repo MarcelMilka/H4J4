@@ -1,4 +1,4 @@
-package com.example.h4j4.user
+package com.example.h4j4.user.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
