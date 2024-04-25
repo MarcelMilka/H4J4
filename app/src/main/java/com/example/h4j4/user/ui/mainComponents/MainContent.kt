@@ -103,10 +103,57 @@ fun ColumnScope.MainContent(
                     var listOfChanges by remember { mutableStateOf(mutableListOf<UserSettingsChange>()) }
 
                     var compareValues = mutableListOf(
+                        ValuesToCompare(defaultValue = 0, editableValue = 0, nameOfSubcollection = "What is tracked", nameOfField = "water").apply {
+
+                            when (defaultWaterIsTracked) {
+                                true -> {
+                                    this.defaultValue = 1
+                                }
+
+                                false -> {
+                                    this.defaultValue = 0
+                                }
+                            }
+
+                            when (editableWaterIsTracked) {
+                                true -> {
+                                    this.editableValue = 1
+                                }
+
+                                false -> {
+                                    this.editableValue = 0
+                                }
+                            }
+                        },
+                        ValuesToCompare(defaultValue = defaultDailyAmountOfWaterToIngest, editableValue = editableDailyAmountOfWaterToIngest, nameOfSubcollection = "Weekly intake of water", nameOfField = "daily goal"),
+
                         ValuesToCompare(defaultValue = defaultFirstPortionOfWater, editableValue = editableFirstPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "first portion"),
                         ValuesToCompare(defaultValue = defaultSecondPortionOfWater, editableValue = editableSecondPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "second portion"),
                         ValuesToCompare(defaultValue = defaultThirdPortionOfWater, editableValue = editableThirdPortionOfWater, nameOfSubcollection = "Portions of water", nameOfField = "third portion"),
 
+                        ValuesToCompare(defaultValue = 0, editableValue = 0, nameOfSubcollection = "What is tracked", nameOfField = "creatine").apply {
+
+                            when (defaultCreatineIsTracked) {
+                                true -> {
+                                    this.defaultValue = 1
+                                }
+
+                                false -> {
+                                    this.defaultValue = 0
+                                }
+                            }
+
+                            when (editableCreatineIsTracked) {
+                                true -> {
+                                    this.editableValue = 1
+                                }
+
+                                false -> {
+                                    this.editableValue = 0
+                                }
+                            }
+                        },
+                        ValuesToCompare(defaultValue = defaultDailyAmountOfCreatineToIngest, editableValue = editableDailyAmountOfCreatineToIngest, nameOfSubcollection = "Weekly intake of creatine", nameOfField = "daily goal"),
                         ValuesToCompare(defaultValue = defaultFirstPortionOfCreatine, editableValue = editableFirstPortionOfCreatine, nameOfSubcollection = "Portions of creatine", nameOfField = "first portion"),
                         ValuesToCompare(defaultValue = defaultSecondPortionOfCreatine, editableValue = editableSecondPortionOfCreatine, nameOfSubcollection = "Portions of creatine", nameOfField = "second portion"),
                         ValuesToCompare(defaultValue = defaultThirdPortionOfCreatine, editableValue = editableThirdPortionOfCreatine, nameOfSubcollection = "Portions of creatine", nameOfField = "third portion")

@@ -117,9 +117,29 @@ class UserRepository: UserRepositoryInterface {
 
         changes.forEach { userSettingsChange ->
 
-            me.document(userSettingsChange.nameOfSubcollection).update(userSettingsChange.nameOfField, userSettingsChange.newValue.toString())
-                .addOnSuccessListener { Log.d("saving changes", "saved successfully") }
-                .addOnFailureListener { Log.d("saving changes", "$it") }
+            if (userSettingsChange.nameOfSubcollection == "What is tracked") {
+
+                when (userSettingsChange.newValue) {
+
+                    0 -> {
+                        me.document(userSettingsChange.nameOfSubcollection)
+                            .update(userSettingsChange.nameOfField,false)
+                    }
+                    1 -> {
+                        me.document(userSettingsChange.nameOfSubcollection)
+                            .update(userSettingsChange.nameOfField,true)
+                    }
+                    else -> {
+                        me.document(userSettingsChange.nameOfSubcollection)
+                            .update(userSettingsChange.nameOfField,false)
+                    }
+                }
+            }
+
+            else {
+                me.document(userSettingsChange.nameOfSubcollection)
+                .update(userSettingsChange.nameOfField, userSettingsChange.newValue.toString())
+            }
         }
     }
 }
