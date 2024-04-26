@@ -91,13 +91,14 @@ class HomeScreen : ComponentActivity() {
 
                         Spacer(modifier = Modifier.height(49.dp))
 
-                        DiagramOfWeeklyCreatineIntake(homeScreenViewState)
+                        DiagramOfWeeklyCreatineIntake(homeScreenViewState) {
+                            bottomSheetLauncher = it
+                        }
 
                         Spacer(modifier = Modifier.height(20.dp))
 
                         DiagramOfWeeklyWaterIntake(homeScreenViewState) {
                             bottomSheetLauncher = it
-                            Log.d("control of bottom sheet launcher", "$bottomSheetLauncher")
                         }
 
                         modalBottomSheet(
@@ -113,7 +114,8 @@ class HomeScreen : ComponentActivity() {
                                     dayOfWeek = dayOfWeek,
                                     nameOfTheLog = nameOfTheLog,
                                     currentAmountOfDrankWater = currentAmountOfDrankWater,
-                                    amountOfWaterToDecrease = amountOfWaterToDecrease
+                                    amountOfWaterToDecrease = amountOfWaterToDecrease,
+                                    waterOrCreatine = bottomSheetLauncher.waterOrCreatine
                                 )
                             }
                         )

@@ -30,7 +30,7 @@ fun modalBottomSheet(
     bottomSheetViewModel: BottomSheetViewModel,
     bottomSheetLauncher: BottomSheetLauncher,
     bottomSheetWithdrawal: (BottomSheetLauncher) -> Unit,
-    deleteTheLog: (dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfDrankWater: Int, amountOfWaterToDecrease: Int) -> Unit
+    deleteTheLog: (dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfIngestedSubstance: Int, amountOfSubstanceToDecrease: Int) -> Unit
 ) {
 
     if (bottomSheetLauncher.launch) {
@@ -82,6 +82,7 @@ fun modalBottomSheet(
                         Divider(modifier = Modifier.height(2.dp))
 
                         when (uiState) {
+
                             HomeScreenBottomSheetViewState.Loading -> {
                                 Text(text = "Loading", color = Color.White)
                             }
@@ -105,6 +106,7 @@ fun modalBottomSheet(
 
                                         content = {
 
+//                                          Display day of week which represents values below it
                                             val currentAmountOfDrankWater = when (bottomSheetLauncher.dayOfWeek) {
 
                                                 DayOfWeek.MONDAY -> {uiState.weeklyIntakeOfWater.monday}
@@ -116,6 +118,7 @@ fun modalBottomSheet(
                                                 DayOfWeek.SUNDAY -> {uiState.weeklyIntakeOfWater.sunday}
                                             }
 
+//                                          display logs with divider
                                             items(uiState.fetchedLogs.dropLast(1)) { waterOrCreatineLog ->
 
                                                 log(bottomSheetLauncher.dayOfWeek, waterOrCreatineLog, waterOrCreatine = bottomSheetLauncher.waterOrCreatine) {
@@ -129,6 +132,7 @@ fun modalBottomSheet(
                                                 Divider(modifier = Modifier.height(0.25.dp))
                                             }
 
+//                                          display logs without divider
                                             item {
                                                 log(bottomSheetLauncher.dayOfWeek, uiState.fetchedLogs.last(), waterOrCreatine = bottomSheetLauncher.waterOrCreatine) {
                                                     deleteTheLog(

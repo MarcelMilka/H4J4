@@ -2,6 +2,7 @@ package com.example.h4j4.homeScreen.ui
 
 import android.util.Log
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
@@ -14,11 +15,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.unit.dp
+import com.example.h4j4.BottomSheetLauncher
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.ui.theme.CircularProgressIndicatorTrackColor
+import java.time.DayOfWeek
 
 @Composable
-fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
+fun DiagramOfWeeklyCreatineIntake(
+    uiState: HomeScreenViewState,
+    bottomSheetLauncher: (BottomSheetLauncher) -> Unit
+) {
 
     Column(
 
@@ -36,7 +43,7 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 
         content = {
 
-//            Description
+//          Description
             Row(
 
                 modifier = Modifier
@@ -64,13 +71,13 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 
                     when (uiState) {
                         HomeScreenViewState.Loading -> {
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "M")
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "T")
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "W")
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "T")
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "F")
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "S")
-                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "S")
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.MONDAY, bottomSheetLauncher = {})
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.TUESDAY, bottomSheetLauncher = {})
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.WEDNESDAY, bottomSheetLauncher = {})
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.THURSDAY, bottomSheetLauncher = {})
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.FRIDAY, bottomSheetLauncher = {})
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.SATURDAY, bottomSheetLauncher = {})
+                            OneDayCreatine(loading = true, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.SUNDAY, bottomSheetLauncher = {})
                         }
 
                         is HomeScreenViewState.LoadedSuccessfully -> {
@@ -79,30 +86,47 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 
                                 val dailyGoal = uiState.weeklyIntakeOfCreatine.dailyGoal
 
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.monday, dailyGoal = dailyGoal,dayOfWeek = "M")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.tuesday, dailyGoal = dailyGoal,dayOfWeek = "T")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.wednesday, dailyGoal = dailyGoal,dayOfWeek = "W")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.thursday, dailyGoal = dailyGoal,dayOfWeek = "T")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.friday, dailyGoal = dailyGoal,dayOfWeek = "F")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.saturday, dailyGoal = dailyGoal,dayOfWeek = "S")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.sunday, dailyGoal = dailyGoal,dayOfWeek = "S")
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.monday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.MONDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
+
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.tuesday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.TUESDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
+
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.wednesday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.WEDNESDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
+
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.thursday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.THURSDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
+
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.friday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.FRIDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
+
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.saturday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.SATURDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
+
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = uiState.weeklyIntakeOfCreatine.sunday, creatineToIngestThisDay = dailyGoal,representedDayOfWeek = DayOfWeek.SUNDAY, bottomSheetLauncher = {
+                                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = it.dayOfWeek, launch = it.launch, waterOrCreatine =  WaterOrCreatine.CREATINE))
+                                })
                             }
 
                             else {
-
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "M")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "T")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "W")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "T")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "F")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "S")
-                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, dailyGoal = null, dayOfWeek = "S")
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.MONDAY, bottomSheetLauncher = {})
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.TUESDAY, bottomSheetLauncher = {})
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.WEDNESDAY, bottomSheetLauncher = {})
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.THURSDAY, bottomSheetLauncher = {})
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.FRIDAY, bottomSheetLauncher = {})
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.SATURDAY, bottomSheetLauncher = {})
+                                OneDayCreatine(loading = false, ingestedAmountOfCreatine = null, creatineToIngestThisDay = null, representedDayOfWeek = DayOfWeek.SUNDAY, bottomSheetLauncher = {})
                             }
                         }
 
-                        HomeScreenViewState.LoadedUnsuccessfully -> {
-                            // TODO:
-                        }
+                        HomeScreenViewState.LoadedUnsuccessfully -> {}
                     }
                 }
             )
@@ -111,7 +135,13 @@ fun DiagramOfWeeklyCreatineIntake(uiState: HomeScreenViewState) {
 }
 
 @Composable
-fun RowScope.OneDayCreatine(loading: Boolean, ingestedAmountOfCreatine: Int?, dailyGoal: Int?, dayOfWeek: String) {
+fun RowScope.OneDayCreatine(
+    ingestedAmountOfCreatine: Int?,
+    creatineToIngestThisDay: Int?,
+    representedDayOfWeek: DayOfWeek,
+    bottomSheetLauncher: (BottomSheetLauncher) -> Unit,
+    loading: Boolean
+) {
 
     Box(
 
@@ -130,7 +160,9 @@ fun RowScope.OneDayCreatine(loading: Boolean, ingestedAmountOfCreatine: Int?, da
 
                 color = Color.Transparent,
 
-                onClick = {},
+                onClick = {
+                    bottomSheetLauncher(BottomSheetLauncher(dayOfWeek = representedDayOfWeek, launch = true, waterOrCreatine = WaterOrCreatine.CREATINE))
+                },
                 content = {}
             )
 
@@ -145,18 +177,15 @@ fun RowScope.OneDayCreatine(loading: Boolean, ingestedAmountOfCreatine: Int?, da
                 )
             }
 
-            else if (!loading && ingestedAmountOfCreatine != null && dailyGoal != null) {
+            else if (!loading && ingestedAmountOfCreatine != null && creatineToIngestThisDay != null) {
 
-                val progress = (ingestedAmountOfCreatine.toFloat() * 1f) / dailyGoal.toFloat()
+                val progress = (ingestedAmountOfCreatine.toFloat() * 1f) / creatineToIngestThisDay.toFloat()
 
                 CircularProgressIndicator(
                     modifier = Modifier
                         .size(30.dp),
 
                     strokeCap = StrokeCap.Round,
-
-//                    1f - daily amount of creatine
-//                    xf - ingested amount of creatine
 
                     progress = progress,
 
@@ -165,7 +194,7 @@ fun RowScope.OneDayCreatine(loading: Boolean, ingestedAmountOfCreatine: Int?, da
                 )
             }
 
-            else if (!loading && ingestedAmountOfCreatine == null && dailyGoal == null) {
+            else if (!loading && ingestedAmountOfCreatine == null && creatineToIngestThisDay == null) {
 
                 CircularProgressIndicator(
                     modifier = Modifier
@@ -180,7 +209,7 @@ fun RowScope.OneDayCreatine(loading: Boolean, ingestedAmountOfCreatine: Int?, da
                 )
             }
 
-            Text(text = dayOfWeek, color = Color.White)
+            Text(text = "${representedDayOfWeek.toString()[0]}", color = Color.White)
 
         }
     )

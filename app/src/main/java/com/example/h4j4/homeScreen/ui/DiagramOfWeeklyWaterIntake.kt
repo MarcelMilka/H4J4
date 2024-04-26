@@ -16,7 +16,10 @@ import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import java.time.DayOfWeek
 
 @Composable
-fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState, bottomSheetLauncher: (BottomSheetLauncher) -> Unit) {
+fun DiagramOfWeeklyWaterIntake(
+    uiState: HomeScreenViewState,
+    bottomSheetLauncher: (BottomSheetLauncher) -> Unit
+) {
 
     Column(
 
@@ -190,11 +193,8 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState, bottomSheetLauncher
                                     }
                                 }
 
-                                HomeScreenViewState.LoadedUnsuccessfully -> {
-                                    Text("Failed to load data")
-                                }
+                                HomeScreenViewState.LoadedUnsuccessfully -> {}
                             }
-
                         }
                     )
                 }
@@ -202,7 +202,7 @@ fun DiagramOfWeeklyWaterIntake(uiState: HomeScreenViewState, bottomSheetLauncher
 
             Divider(modifier = Modifier.fillMaxWidth())
 
-//            Days of week
+//          Days of week
             Row(
 
                 modifier = Modifier

@@ -2,6 +2,7 @@ package com.example.h4j4.homeScreenBottomSheet.repository
 
 import android.util.Log
 import com.example.h4j4.homeScreen.viewState.WeeklyIntakeOfWater
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.homeScreenBottomSheet.viewState.WaterOrCreatineLog
 import com.google.firebase.firestore.FirebaseFirestore
 import java.time.DayOfWeek
@@ -11,14 +12,18 @@ import kotlin.coroutines.suspendCoroutine
 class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
 
     private val firebase: FirebaseFirestore = FirebaseFirestore.getInstance()
-    override suspend fun fetchAllWaterLogs(dayOfWeek: DayOfWeek): List<WaterOrCreatineLog> {
+    override suspend fun fetchAllLogs(dayOfWeek: DayOfWeek, waterOrCreatine: WaterOrCreatine): List<WaterOrCreatineLog> {
 
-        val fetchedLogs = mutableListOf<WaterOrCreatineLog>()
+        val documentPath = when (waterOrCreatine) {
+            WaterOrCreatine.WATER -> {"Logs of water intake"}
+            WaterOrCreatine.CREATINE -> {"Logs of creatine intake"}
+        }
+        val fetchedLogsToPushFurther = mutableListOf<WaterOrCreatineLog>()
 
         return suspendCoroutine { continuation ->
 
             try {
-                firebase.collection("me").document("Logs of water intake")
+                firebase.collection("me").document(documentPath)
                     .collection("$dayOfWeek")
                     .get()
                     .addOnSuccessListener {containerOfLogs ->
@@ -29,10 +34,8 @@ class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
                             allLogs.forEach { log ->
 
                                 log.toObject(WaterOrCreatineLog::class.java)?.let {
-                                    Log.d("fetchAllWaterLogs:", "$it")
 
-
-                                    fetchedLogs.add(WaterOrCreatineLog(
+                                    fetchedLogsToPushFurther.add(WaterOrCreatineLog(
                                         amount = it.amount,
                                         time = it.time,
                                         nameOfTheLog = log.id
@@ -40,7 +43,7 @@ class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
                                 }
 
                             }
-                            continuation.resume(fetchedLogs)
+                            continuation.resume(fetchedLogsToPushFurther)
                         }
 
                         catch (e: Exception) {
@@ -56,7 +59,7 @@ class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
         }
     }
 
-    override suspend fun fetchWeeklyIntakeOfWater(): WeeklyIntakeOfWater {
+    override suspend fun fetchWeeklyIntakeOfSubstance(): WeeklyIntakeOfWater {
 
         return suspendCoroutine { continuation ->
 
@@ -99,9 +102,14 @@ class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
         }
     }
 
-    override suspend fun deleteTheLog(dayOfWeek: DayOfWeek, nameOfTheLog: String) {
+    override suspend fun deleteTheLog(dayOfWeek: DayOfWeek, nameOfTheLog: String, waterOrCreatine: WaterOrCreatine) {
 
-        firebase.collection("me").document("Logs of water intake")
+        val documentPath = when (waterOrCreatine) {
+            WaterOrCreatine.WATER -> {"Logs of water intake"}
+            WaterOrCreatine.CREATINE -> {"Logs of creatine intake"}
+        }
+
+        firebase.collection("me").document(documentPath)
             .collection("$dayOfWeek")
             .document(nameOfTheLog)
             .delete()
@@ -109,12 +117,17 @@ class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
             .addOnFailureListener { Log.d("uuu la la", "A problem occured while deleting the log $nameOfTheLog") }
     }
 
-    override suspend fun decreaseAmountOfDrankWater(dayOfWeek: DayOfWeek, amountToUpdate: String) {
+    override suspend fun decreaseAmountOfIngestedSubstance(waterOrCreatine: WaterOrCreatine, dayOfWeek: DayOfWeek, amountToUpdate: String) {
+
+        val documentPath = when (waterOrCreatine) {
+            WaterOrCreatine.WATER -> {"Weekly intake of water"}
+            WaterOrCreatine.CREATINE -> {"Weekly intake of creatine"}
+        }
 
         var fieldToUpdate = mutableMapOf<String, Any>()
         fieldToUpdate.put(dayOfWeek.toString().lowercase(), amountToUpdate)
 
-        firebase.collection("me").document("Weekly intake of water")
+        firebase.collection("me").document(documentPath)
             .update(fieldToUpdate)
             .addOnSuccessListener { Log.d("uuu la la", "The amount of drank water has been updated successfully.") }
             .addOnFailureListener { Log.d("uuu la la", "A problem occured while updating the amount of drank water.") }

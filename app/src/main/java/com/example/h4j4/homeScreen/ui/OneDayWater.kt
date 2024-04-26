@@ -16,7 +16,12 @@ import com.example.h4j4.ui.theme.ProgressIndicatorTrackColor
 import java.time.DayOfWeek
 
 @Composable
-fun RowScope.OneDayWater(waterDrankThisDay: Int?, waterToDrinkThisDay: Int?, representedDayOfWeek: DayOfWeek, bottomSheetLauncher: (BottomSheetLauncher) -> Unit) {
+fun RowScope.OneDayWater(
+    waterDrankThisDay: Int?,
+    waterToDrinkThisDay: Int?,
+    representedDayOfWeek: DayOfWeek,
+    bottomSheetLauncher: (BottomSheetLauncher) -> Unit
+) {
 
     val progressIndicatorTrackColor = if (waterDrankThisDay != null && waterToDrinkThisDay != null) {
 
