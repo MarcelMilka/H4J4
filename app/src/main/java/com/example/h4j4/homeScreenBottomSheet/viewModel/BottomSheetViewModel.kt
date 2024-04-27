@@ -28,7 +28,7 @@ class BottomSheetViewModel @Inject constructor() : ViewModel() {
                 WaterOrCreatine.WATER -> {
 
                     val fetchedLogs = repository.fetchAllLogs(dayOfWeek = dayOfWeek, waterOrCreatine = waterOrCreatine)
-                    val weeklyIntakeOfWater = repository.fetchWeeklyIntakeOfSubstance()
+                    val weeklyIntakeOfWater = repository.fetchWeeklyIntakeOfSubstance(WaterOrCreatine.WATER)
 
                     _State.emit(HomeScreenBottomSheetViewState.LoadedSuccessfully(fetchedLogs = fetchedLogs, weeklyIntakeOfWater = weeklyIntakeOfWater))
                 }
@@ -36,9 +36,9 @@ class BottomSheetViewModel @Inject constructor() : ViewModel() {
                 WaterOrCreatine.CREATINE -> {
 
                     val fetchedLogs = repository.fetchAllLogs(dayOfWeek = dayOfWeek, waterOrCreatine = waterOrCreatine)
-                    val weeklyIntakeOfWater = repository.fetchWeeklyIntakeOfSubstance()
+                    val weeklyIntake = repository.fetchWeeklyIntakeOfSubstance(WaterOrCreatine.CREATINE)
 
-                    _State.emit(HomeScreenBottomSheetViewState.LoadedSuccessfully(fetchedLogs = fetchedLogs, weeklyIntakeOfWater = weeklyIntakeOfWater))
+                    _State.emit(HomeScreenBottomSheetViewState.LoadedSuccessfully(fetchedLogs = fetchedLogs, weeklyIntakeOfWater = weeklyIntake))
                 }
             }
         }
@@ -50,14 +50,14 @@ class BottomSheetViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun deleteTheLogAndDecreaseAmountOfDrankWater(dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfDrankWater: Int, amountOfWaterToDecrease: Int, waterOrCreatine: WaterOrCreatine) {
+    fun deleteTheLogAndDecreaseAmountOfIngestedSubstance(dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfIngestedSubstance: Int, amountOfSubstanceToDecrease: Int, waterOrCreatine: WaterOrCreatine) {
 
-        val amountOfWaterToUpdate = currentAmountOfDrankWater - amountOfWaterToDecrease
+        val amountOfSubstanceToUpdate = currentAmountOfIngestedSubstance - amountOfSubstanceToDecrease
 
         CoroutineScope(Dispatchers.IO).launch {
 
             repository.deleteTheLog(dayOfWeek = dayOfWeek, nameOfTheLog = nameOfTheLog, waterOrCreatine = waterOrCreatine)
-            repository.decreaseAmountOfIngestedSubstance(dayOfWeek = dayOfWeek, amountToUpdate = amountOfWaterToUpdate.toString(), waterOrCreatine = waterOrCreatine)
+            repository.decreaseAmountOfIngestedSubstance(dayOfWeek = dayOfWeek, amountToUpdate = amountOfSubstanceToUpdate.toString(), waterOrCreatine = waterOrCreatine)
         }
     }
 }

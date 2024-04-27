@@ -59,11 +59,16 @@ class HomeScreenBottomSheetRepository: HomeScreenBottomSheetInterface {
         }
     }
 
-    override suspend fun fetchWeeklyIntakeOfSubstance(): WeeklyIntakeOfWater {
+    override suspend fun fetchWeeklyIntakeOfSubstance(waterOrCreatine: WaterOrCreatine): WeeklyIntakeOfWater {
+
+        val documentPath = when (waterOrCreatine) {
+            WaterOrCreatine.WATER -> {"Weekly intake of water"}
+            WaterOrCreatine.CREATINE -> {"Weekly intake of creatine"}
+        }
 
         return suspendCoroutine { continuation ->
 
-            firebase.collection("me").document("Weekly intake of water")
+            firebase.collection("me").document(documentPath)
                 .get()
                 .addOnSuccessListener {
 

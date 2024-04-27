@@ -2,7 +2,6 @@ package com.example.h4j4.homeScreen.view
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
@@ -12,9 +11,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,7 +28,6 @@ import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreenBottomSheet.view.modalBottomSheet
 import com.example.h4j4.homeScreenBottomSheet.viewModel.BottomSheetViewModel
 import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
-import com.example.h4j4.ui.theme.Sixty
 import com.example.h4j4.user.view.User
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.DayOfWeek
@@ -51,10 +47,8 @@ class HomeScreen : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
 
-//        a reference to the splash screen
-        installSplashScreen().apply {
-
-        }
+//      a reference to the splash screen
+        installSplashScreen().apply {}
 
         viewModel.currentState.observe(this@HomeScreen) { homeScreenViewState ->
 
@@ -110,11 +104,11 @@ class HomeScreen : ComponentActivity() {
 
                             deleteTheLog = {dayOfWeek: DayOfWeek, nameOfTheLog: String, currentAmountOfDrankWater: Int, amountOfWaterToDecrease: Int ->
 
-                                bottomSheetViewModel.deleteTheLogAndDecreaseAmountOfDrankWater(
+                                bottomSheetViewModel.deleteTheLogAndDecreaseAmountOfIngestedSubstance(
                                     dayOfWeek = dayOfWeek,
                                     nameOfTheLog = nameOfTheLog,
-                                    currentAmountOfDrankWater = currentAmountOfDrankWater,
-                                    amountOfWaterToDecrease = amountOfWaterToDecrease,
+                                    currentAmountOfIngestedSubstance = currentAmountOfDrankWater,
+                                    amountOfSubstanceToDecrease = amountOfWaterToDecrease,
                                     waterOrCreatine = bottomSheetLauncher.waterOrCreatine
                                 )
                             }

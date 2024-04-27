@@ -7,7 +7,7 @@ import java.time.DayOfWeek
 
 interface HomeScreenBottomSheetInterface {
     suspend fun fetchAllLogs(dayOfWeek: DayOfWeek, waterOrCreatine: WaterOrCreatine): List<WaterOrCreatineLog>
-    suspend fun fetchWeeklyIntakeOfSubstance(): WeeklyIntakeOfWater
+    suspend fun fetchWeeklyIntakeOfSubstance(waterOrCreatine: WaterOrCreatine): WeeklyIntakeOfWater
     suspend fun deleteTheLog(dayOfWeek: DayOfWeek, nameOfTheLog: String, waterOrCreatine: WaterOrCreatine)
     suspend fun decreaseAmountOfIngestedSubstance(waterOrCreatine: WaterOrCreatine, dayOfWeek: DayOfWeek, amountToUpdate: String)
 }

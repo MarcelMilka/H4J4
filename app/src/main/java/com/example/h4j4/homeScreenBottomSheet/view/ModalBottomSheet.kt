@@ -1,5 +1,6 @@
 package com.example.h4j4.homeScreenBottomSheet.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,11 +44,14 @@ fun modalBottomSheet(
                 .fillMaxHeight(0.5f),
 
             containerColor = Sixty,
+
             onDismissRequest = {
-                bottomSheetWithdrawal(BottomSheetLauncher(DayOfWeek.MONDAY, false, WaterOrCreatine.WATER))
+                bottomSheetWithdrawal(BottomSheetLauncher(DayOfWeek.MONDAY, false, bottomSheetLauncher.waterOrCreatine))
                 bottomSheetViewModel.leaveBottomSheetViewModel()
             },
+
             sheetState = sheetState,
+
             content = {
 
                 Column(
@@ -106,16 +110,21 @@ fun modalBottomSheet(
 
                                         content = {
 
-//                                          Display day of week which represents values below it
-                                            val currentAmountOfDrankWater = when (bottomSheetLauncher.dayOfWeek) {
+                                            val uiStateReference = when (bottomSheetLauncher.waterOrCreatine) {
+                                                WaterOrCreatine.WATER -> {uiState.weeklyIntakeOfWater}
+                                                WaterOrCreatine.CREATINE -> {uiState.weeklyIntakeOfWater}
+                                            }
 
-                                                DayOfWeek.MONDAY -> {uiState.weeklyIntakeOfWater.monday}
-                                                DayOfWeek.TUESDAY -> {uiState.weeklyIntakeOfWater.tuesday}
-                                                DayOfWeek.WEDNESDAY -> {uiState.weeklyIntakeOfWater.wednesday}
-                                                DayOfWeek.THURSDAY -> {uiState.weeklyIntakeOfWater.thursday}
-                                                DayOfWeek.FRIDAY -> {uiState.weeklyIntakeOfWater.friday}
-                                                DayOfWeek.SATURDAY -> {uiState.weeklyIntakeOfWater.saturday}
-                                                DayOfWeek.SUNDAY -> {uiState.weeklyIntakeOfWater.sunday}
+//                                          display day of week which represents values below it
+                                            val currentAmountOfIngestedSubstance = when (bottomSheetLauncher.dayOfWeek) {
+
+                                                DayOfWeek.MONDAY -> {uiStateReference.monday}
+                                                DayOfWeek.TUESDAY -> {uiStateReference.tuesday}
+                                                DayOfWeek.WEDNESDAY -> {uiStateReference.wednesday}
+                                                DayOfWeek.THURSDAY -> {uiStateReference.thursday}
+                                                DayOfWeek.FRIDAY -> {uiStateReference.friday}
+                                                DayOfWeek.SATURDAY -> {uiStateReference.saturday}
+                                                DayOfWeek.SUNDAY -> {uiStateReference.sunday}
                                             }
 
 //                                          display logs with divider
@@ -125,9 +134,10 @@ fun modalBottomSheet(
                                                     deleteTheLog(
                                                         bottomSheetLauncher.dayOfWeek,
                                                         waterOrCreatineLog.nameOfTheLog,
-                                                        currentAmountOfDrankWater,
+                                                        currentAmountOfIngestedSubstance,
                                                         waterOrCreatineLog.amount.toInt()
                                                     )
+                                                    Log.d("crf450", "$currentAmountOfIngestedSubstance")
                                                 }
                                                 Divider(modifier = Modifier.height(0.25.dp))
                                             }
@@ -138,9 +148,10 @@ fun modalBottomSheet(
                                                     deleteTheLog(
                                                         bottomSheetLauncher.dayOfWeek,
                                                         uiState.fetchedLogs.last().nameOfTheLog,
-                                                        currentAmountOfDrankWater,
+                                                        currentAmountOfIngestedSubstance,
                                                         uiState.fetchedLogs.last().amount.toInt()
                                                     )
+                                                    Log.d("crf450", "$currentAmountOfIngestedSubstance")
                                                 }
                                             }
                                         }
