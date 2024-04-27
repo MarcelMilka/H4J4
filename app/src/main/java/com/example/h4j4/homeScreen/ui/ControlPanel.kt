@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.h4j4.homeScreen.viewModel.HomeScreenViewModel
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.example.h4j4.ui.theme.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,7 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
 
         content = {
 
-//            Creatine and water circular progress indicators
+//          Creatine and water circular progress indicators
             Box(
 
                 modifier = Modifier
@@ -61,7 +62,7 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                     when (uiState) {
                         HomeScreenViewState.Loading -> {
 
-//                            Water
+//                          Water
                             CircularProgressIndicator(
 
                                 modifier = Modifier
@@ -73,7 +74,7 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                                 color = WaterToDrink
                             )
 
-//                            Creatine
+//                          Creatine
                             CircularProgressIndicator(
 
                                 modifier = Modifier
@@ -179,7 +180,7 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                                 trackColor = WaterToDrink
                             )
 
-//                            Creatine
+//                          Creatine
                             CircularProgressIndicator(
 
                                 modifier = Modifier
@@ -223,19 +224,19 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                                 AssistChipLoaded(uiState.portionsOfWater.firstPortion, waterIngestedToday.toInt()) {
 
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.firstPortion.toString())
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.firstPortion.toString(), WaterOrCreatine.WATER)
                                     }
                                 }
                                 AssistChipLoaded(uiState.portionsOfWater.secondPortion, waterIngestedToday.toInt()) {
 
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.secondPortion.toString())
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.secondPortion.toString(), WaterOrCreatine.WATER)
                                     }
                                 }
                                 AssistChipLoaded(uiState.portionsOfWater.thirdPortion, waterIngestedToday.toInt()) {
 
                                     CoroutineScope(Dispatchers.IO).launch {
-                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.thirdPortion.toString())
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfWater.thirdPortion.toString(), WaterOrCreatine.WATER)
                                     }
                                 }
                             }
@@ -278,13 +279,22 @@ fun ControllPanel(uiState: HomeScreenViewState, viewModel: HomeScreenViewModel) 
                         is HomeScreenViewState.LoadedSuccessfully -> {
                             if (uiState.whatIsTracked.creatine) {
                                 AssistChipLoaded(uiState.portionsOfCreatine.firstPortion, creatineIngestedToday.toInt()) {
-                                    // TODO: add a function for creatine
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfCreatine.firstPortion.toString(), WaterOrCreatine.CREATINE)
+                                    }
                                 }
                                 AssistChipLoaded(uiState.portionsOfCreatine.secondPortion, creatineIngestedToday.toInt()) {
-                                    // TODO: add a function for creatine
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfCreatine.secondPortion.toString(), WaterOrCreatine.CREATINE)
+                                    }
                                 }
                                 AssistChipLoaded(uiState.portionsOfCreatine.thirdPortion, creatineIngestedToday.toInt()) {
-                                    // TODO: add a function for creatine
+
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        viewModel.increaseAmountOfDrankWaterAndAddLog(it.toString(), uiState.portionsOfCreatine.thirdPortion.toString(), WaterOrCreatine.CREATINE)
+                                    }
                                 }
                             }
 
@@ -363,7 +373,7 @@ fun AssistChipLoading() {
 }
 
 @Composable
-fun AssistChipLoaded(valueOfPortion: Int, currentAmountOfDrankWaterToday: Int, calculatedNewValue: (amountOfWaterDrankToday: Int) -> Unit) {
+fun AssistChipLoaded(valueOfPortion: Int, currentAmountOfIngestedSubstanceToday: Int, calculatedNewValue: (amountOfIngestedSubstanceToday: Int) -> Unit) {
 
     val textToDisplay = if (valueOfPortion != 0) {
         valueOfPortion.toString()
@@ -381,7 +391,7 @@ fun AssistChipLoaded(valueOfPortion: Int, currentAmountOfDrankWaterToday: Int, c
         onClick = {
 
             if (valueOfPortion != 0) {
-                calculatedNewValue(currentAmountOfDrankWaterToday + valueOfPortion)
+                calculatedNewValue(currentAmountOfIngestedSubstanceToday + valueOfPortion)
             }
             else {
                 // TODO: function which directs to settings

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.h4j4.homeScreen.repository.HomeScreenRepository
 import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -82,9 +83,9 @@ class HomeScreenViewModel @Inject constructor(private val repository: HomeScreen
         }
     }
 
-    suspend fun increaseAmountOfDrankWaterAndAddLog(updatedAmountOfWaterDrankToday: String, portionOfWater: String) {
+    suspend fun increaseAmountOfDrankWaterAndAddLog(updatedAmountOfIngestedSubstanceToday: String, sizeOfThePortion: String, waterOrCreatine: WaterOrCreatine) {
 
-        repository.increaseAmountOfDrankWaterToday(updatedAmountOfWaterDrankToday)
-        repository.addAnotherPortionOfWaterToLogs(portionOfWater)
+        repository.increaseAmountOfIngestedSubstanceToday(finalAmountToUpdate = updatedAmountOfIngestedSubstanceToday, waterOrCreatine = waterOrCreatine)
+        repository.addAnotherPortionOfSubstanceToLogs(sizeOfThePortion = sizeOfThePortion, waterOrCreatine = waterOrCreatine)
     }
 }

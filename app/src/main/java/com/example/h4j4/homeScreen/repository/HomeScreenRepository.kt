@@ -2,6 +2,7 @@ package com.example.h4j4.homeScreen.repository
 
 import android.util.Log
 import com.example.h4j4.homeScreen.viewState.*
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
     private val me = firebase.collection("me")
     private val _weeklyIntakeOfWater = me.document("Weekly intake of water")
     private val _weeklyIntakeOfCreatine = me.document("Weekly intake of creatine")
-    private val logsOfWaterIntake = me.document("Logs of water intake")
+    private val _logsOfWaterIntake = me.document("Logs of water intake")
+    private val _logsOfCreatineIntake = me.document("Logs of creatine intake")
 
     override suspend fun checkWhatIsTracked(): WhatIsTracked {
 
@@ -400,16 +402,19 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
         }
     }
 
-    override suspend fun addAnotherPortionOfWaterToLogs(portion: String) {
+    override suspend fun addAnotherPortionOfSubstanceToLogs(sizeOfThePortion: String, waterOrCreatine: WaterOrCreatine) {
+
 
         val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
         val currentTime: LocalTime = LocalTime.now()
         val timeToPush = "${currentTime.hour}:${currentTime.minute}"
 
-        val logsOfCurrentDay = me.document("Logs of water intake")
-            .collection(currentDay.toString())
+        val logsOfCurrentDay = when (waterOrCreatine) {
+            WaterOrCreatine.WATER -> {_logsOfWaterIntake.collection(currentDay.toString())}
+            WaterOrCreatine.CREATINE -> {_logsOfCreatineIntake.collection(currentDay.toString())}
+        }
 
-        val newLog = NewLog(amount = portion, time = timeToPush)
+        val newLog = NewLog(amount = sizeOfThePortion, time = timeToPush)
 
         logsOfCurrentDay
             .add(newLog)
@@ -417,7 +422,12 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
             .addOnFailureListener { Log.d("addAnotherPortionOfWater", "failed to add new portion of water") }
     }
 
-    override suspend fun increaseAmountOfDrankWaterToday(finalAmountToUpdate: String) {
+    override suspend fun increaseAmountOfIngestedSubstanceToday(finalAmountToUpdate: String, waterOrCreatine: WaterOrCreatine) {
+
+        val documentReference = when (waterOrCreatine) {
+            WaterOrCreatine.WATER -> {_weeklyIntakeOfWater}
+            WaterOrCreatine.CREATINE -> {_weeklyIntakeOfCreatine}
+        }
 
         val currentDay: DayOfWeek = LocalDate.now().dayOfWeek
 
@@ -426,7 +436,7 @@ class HomeScreenRepository @Inject constructor(): HomeScreenInterface {
 
         toUpdate.put(key = currentDayAsString, value = finalAmountToUpdate)
 
-        _weeklyIntakeOfWater
+        documentReference
             .update(toUpdate)
             .addOnSuccessListener {Log.d("increaseAmountOfDrankWaterToday", "updated successfully")}
             .addOnFailureListener {Log.d("increaseAmountOfDrankWaterToday", "failed to update")}

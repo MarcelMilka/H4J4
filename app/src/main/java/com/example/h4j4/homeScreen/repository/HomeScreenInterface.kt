@@ -1,10 +1,8 @@
 package com.example.h4j4.homeScreen.repository
 
 import android.util.Log
-import com.example.h4j4.homeScreen.viewState.HomeScreenViewState
-import com.example.h4j4.homeScreen.viewState.LoadChangesUnit
-import com.example.h4j4.homeScreen.viewState.MyUnit
-import com.example.h4j4.homeScreen.viewState.WhatIsTracked
+import com.example.h4j4.homeScreen.viewState.*
+import com.example.h4j4.homeScreenBottomSheet.viewModel.WaterOrCreatine
 import dagger.hilt.android.HiltAndroidApp
 import java.util.concurrent.Flow
 import javax.inject.Inject
@@ -16,6 +14,6 @@ interface HomeScreenInterface {
     suspend fun loadData(whatIsTracked: WhatIsTracked?): MyUnit
     suspend fun loadChanges(homeScreenViewState: HomeScreenViewState.LoadedSuccessfully) : kotlinx.coroutines.flow.Flow<LoadChangesUnit>
 
-    suspend fun addAnotherPortionOfWaterToLogs(portion: String)
-    suspend fun increaseAmountOfDrankWaterToday(finalAmountToUpdate: String)
+    suspend fun addAnotherPortionOfSubstanceToLogs(sizeOfThePortion: String, waterOrCreatine: WaterOrCreatine)
+    suspend fun increaseAmountOfIngestedSubstanceToday(finalAmountToUpdate: String, waterOrCreatine: WaterOrCreatine)
 }
